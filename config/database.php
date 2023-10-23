@@ -55,10 +55,11 @@ return array(
 
                 'mysql' => array(
                         'driver'    => 'mysql',
-                        'host'      => 'localhost',
-                        'database'  => 'ddqqnhwpxx',
-                        'username'  => 'ddqqnhwpxx',
-                        'password'  => 'jZ2wz9sfZY',
+                        'host' => env('DB_HOST', 'localhost'),
+                        'port' => env('DB_PORT', '3306'),
+                        'database' => env('DB_DATABASE', 'smsdashboard_db'),
+                        'username' => env('DB_USERNAME', 'root'),
+                        'password' => env('DB_PASSWORD', ''),
                         'charset'   => 'utf8',
                         'collation' => 'utf8_unicode_ci',
                         'prefix'    => '',
