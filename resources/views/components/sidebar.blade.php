@@ -11,6 +11,38 @@
             </a>
         </li>
         <li class="nav-item">
+            <a href="{{ route('admin.leads') }}" class="nav-link {{ Route::is('admin.leads') ? 'active' : '' }}">
+                <i class="nav-icon fas fa-users"></i>
+                <p>
+                    Leads
+                </p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{{ route('admin.campaigns') }}" class="nav-link {{ Route::is('admin.campaigns') ? 'active' : '' }}">
+                <i class="nav-icon fas fa-bullhorn"></i>
+                <p>
+                    Campaigns
+                </p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{{ route('admin.mailservers') }}" class="nav-link {{ Route::is('admin.mailservers') ? 'active' : '' }}">
+                <i class="nav-icon fas fa-external-link-square-alt"></i>
+                <p>
+                    Sending Servers
+                </p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{{ route('admin.feeds') }}" class="nav-link {{ Route::is('admin.feeds') ? 'active' : '' }}">
+                <i class="nav-icon fas fa-rss-square"></i>
+                <p>
+                    Imports
+                </p>
+            </a>
+        </li>
+        <li class="nav-item">
             <a href="{{ route('admin.user.index') }}" class="nav-link {{ Route::is('admin.user.index') ? 'active' : '' }}">
                 <i class="nav-icon fas fa-user"></i>
                 <p>
