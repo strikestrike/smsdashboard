@@ -16,7 +16,9 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
 
     Route::resource('user',UserController::class);
 
-    Route::get('/leads',[LeadController::class,'index'])->name('leads');
+    Route::delete('leads/destroy', [LeadController::class, 'massDestroy'])->name('leads.massDestroy');
+    Route::resource('leads', LeadController::class);
+
     Route::get('/campaigns',[CampaignController::class,'index'])->name('campaigns');
     Route::get('/mailservers',[MailServerController::class,'index'])->name('mailservers');
     Route::get('/feeds',[ImportController::class,'index'])->name('feeds');

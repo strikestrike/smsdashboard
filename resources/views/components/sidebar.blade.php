@@ -11,7 +11,7 @@
             </a>
         </li>
         <li class="nav-item">
-            <a href="{{ route('admin.leads') }}" class="nav-link {{ Route::is('admin.leads') ? 'active' : '' }}">
+            <a href="{{ route('admin.leads.index') }}" class="nav-link {{ Route::is('admin.leads.index') ? 'active' : '' }}">
                 <i class="nav-icon fas fa-users"></i>
                 <p>
                     Leads
