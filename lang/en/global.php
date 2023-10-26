@@ -24,6 +24,7 @@ return [
     'logout'                         => 'Logout',
     'month'                          => 'Month',
     'no'                             => 'No',
+    'back_to_list'                   => 'Back to list',
     'pleaseSelect'                   => 'Please select',
     'register'                       => 'Register',
     'remember_me'                    => 'Remember me',

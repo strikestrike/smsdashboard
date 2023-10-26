@@ -44,7 +44,7 @@ class LeadController extends Controller
                 ));
             });
 
-            $table->rawColumns(['placeholder', 'actions']);
+            $table->rawColumns(['placeholder', 'used_campaigns', 'exclude_campaigns', 'actions']);
 
             return $table->make(true);
         }
@@ -102,4 +102,5 @@ class LeadController extends Controller
 
         return response(null, Response::HTTP_NO_CONTENT);
     }
+
 }

@@ -21,5 +21,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
 
     Route::get('/campaigns',[CampaignController::class,'index'])->name('campaigns');
     Route::get('/mailservers',[MailServerController::class,'index'])->name('mailservers');
-    Route::get('/feeds',[ImportController::class,'index'])->name('feeds');
+
+    Route::get('feeds',[ImportController::class,'index'])->name('feeds.index');
+    Route::post('feeds/postUploadExcel',[ImportController::class,'postUploadExcel'])->name('feeds.upload');
 });

@@ -22,7 +22,7 @@
                 </div>
                 <div class="form-group">
                     <label for="email">{{ trans('cruds.lead.fields.email') }}</label>
-                    <input class="form-control {{ $errors->has('email') ? 'is-invalid' : '' }}" type="email" name="email" id="email" value="{{ old('email', $lead->name) }}">
+                    <input class="form-control {{ $errors->has('email') ? 'is-invalid' : '' }}" type="email" name="email" id="email" value="{{ old('email', $lead->email) }}">
                     @if($errors->has('email'))
                         <span class="text-danger">{{ $errors->first('email') }}</span>
                     @endif
@@ -76,10 +76,5 @@
             </form>
         </div>
     </div>
-
-    @section('page_scripts')
-        <script>
-        </script>
-    @endsection
 
 </x-admin>

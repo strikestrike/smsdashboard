@@ -35,7 +35,7 @@
             </a>
         </li>
         <li class="nav-item">
-            <a href="{{ route('admin.feeds') }}" class="nav-link {{ Route::is('admin.feeds') ? 'active' : '' }}">
+            <a href="{{ route('admin.feeds.index') }}" class="nav-link {{ Route::is('admin.feeds.index') ? 'active' : '' }}">
                 <i class="nav-icon fas fa-rss-square"></i>
                 <p>
                     Imports

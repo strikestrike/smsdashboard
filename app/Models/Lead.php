@@ -16,8 +16,6 @@ class Lead extends Model
         'email',
         'phone',
         'origin',
-        'tag_id',
-        'used_campaigns_ids',
-        'exclude_campaigns_ids'
+        'tag_ids'
     ];
 }
