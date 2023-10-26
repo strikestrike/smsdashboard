@@ -32,7 +32,7 @@
                         <th>{{ __('cruds.lead.fields.email') }}</th>
                         <th>{{ __('cruds.lead.fields.phone') }}</th>
                         <th>{{ __('cruds.lead.fields.origin') }}</th>
-{{--                        <th>{{ __('cruds.lead.fields.tags') }}</th>--}}
+                        <th>{{ __('cruds.lead.fields.tags') }}</th>
                         <th>{{ __('cruds.lead.fields.used_campaigns') }}</th>
                         <th>{{ __('cruds.lead.fields.exclude_campaigns') }}</th>
                         <th>{{ __('cruds.lead.fields.created_at') }}</th>
@@ -94,9 +94,9 @@
                     { data: 'email', name: 'email' },
                     { data: 'phone', name: 'phone' },
                     { data: 'origin', name: 'origin' },
-                    // { data: 'tag_id', name: 'tag_id' },
-                    { data: 'used_campaigns_ids', name: 'used_campaigns_ids' },
-                    { data: 'exclude_campaigns_ids', name: 'exclude_campaigns_ids' },
+                    { data: 'tag_ids', name: 'tag_ids' },
+                    { data: 'used_campaigns', name: 'used_campaigns' },
+                    { data: 'exclude_campaigns', name: 'exclude_campaigns' },
                     { data: 'created_at', name: 'created_at' },
                     { data: 'actions', sortable: false, searchable: false }
                 ],

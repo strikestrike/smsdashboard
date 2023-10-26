@@ -27,6 +27,8 @@ class LeadController extends Controller
             });
 
             $table->addColumn('placeholder', '&nbsp;');
+            $table->addColumn('used_campaigns', '&nbsp;');
+            $table->addColumn('exclude_campaigns', '&nbsp;');
             $table->addColumn('actions', function ($row) {
                 $viewGate = 'lead_show';
                 $editGate = 'lead_edit';
