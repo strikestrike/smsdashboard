@@ -18,13 +18,34 @@
                 </p>
             </a>
         </li>
-        <li class="nav-item">
-            <a href="{{ route('admin.campaigns') }}" class="nav-link {{ Route::is('admin.campaigns') ? 'active' : '' }}">
+        <li class="nav-item {{ Route::is('admin.campaigns*') ? 'menu-is-opening' : '' }}">
+            <a href="#" class="nav-link">
                 <i class="nav-icon fas fa-bullhorn"></i>
                 <p>
                     Campaigns
+                    <i class="right fas fa-angle-left"></i>
                 </p>
             </a>
+            <ul class="nav nav-treeview" style="{{ Route::is('admin.campaigns*') ? 'display: block;' : '' }}">
+                <li class="nav-item">
+                    <a href="{{ route('admin.campaigns.create') }}" class="nav-link {{ Route::is('admin.campaigns.create') ? 'active' : '' }}">
+                        <i class="far fa-circle nav-icon text-success"></i>
+                        <p>New Campaign</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('admin.campaigns.ongoing') }}" class="nav-link {{ Route::is('admin.campaigns.ongoing') ? 'active' : '' }}">
+                        <i class="far fa-circle nav-icon text-fuchsia"></i>
+                        <p>Ongoing Campaigns</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('admin.campaigns.history') }}" class="nav-link {{ Route::is('admin.campaigns.history') ? 'active' : '' }}">
+                        <i class="far fa-circle nav-icon text-indigo"></i>
+                        <p>Campaigns History</p>
+                    </a>
+                </li>
+            </ul>
         </li>
         <li class="nav-item">
             <a href="{{ route('admin.mailservers') }}" class="nav-link {{ Route::is('admin.mailservers') ? 'active' : '' }}">

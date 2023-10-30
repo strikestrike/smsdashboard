@@ -19,7 +19,10 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
     Route::delete('leads/destroy', [LeadController::class, 'massDestroy'])->name('leads.massDestroy');
     Route::resource('leads', LeadController::class);
 
-    Route::get('/campaigns',[CampaignController::class,'index'])->name('campaigns');
+    Route::get('campaigns/ongoing', [CampaignController::class, 'ongoing'])->name('campaigns.ongoing');
+    Route::get('campaigns/history', [CampaignController::class, 'history'])->name('campaigns.history');
+    Route::resource('campaigns', CampaignController::class);
+
     Route::get('/mailservers',[MailServerController::class,'index'])->name('mailservers');
 
     Route::get('feeds',[ImportController::class,'index'])->name('feeds.index');
