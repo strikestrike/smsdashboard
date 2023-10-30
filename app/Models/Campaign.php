@@ -20,6 +20,6 @@ class Campaign extends Model
         'server_ids',
         'template',
         'scheduled_at',
-        'sent_at',
+        'completed_at',
     ];
 }

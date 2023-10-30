@@ -21,6 +21,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
 
     Route::get('campaigns/ongoing', [CampaignController::class, 'ongoing'])->name('campaigns.ongoing');
     Route::get('campaigns/history', [CampaignController::class, 'history'])->name('campaigns.history');
+    Route::delete('campaigns/destroy', [CampaignController::class, 'massDestroy'])->name('campaigns.massDestroy');
     Route::resource('campaigns', CampaignController::class);
 
     Route::get('/mailservers',[MailServerController::class,'index'])->name('mailservers');

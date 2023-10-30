@@ -3,10 +3,6 @@
     {{ 'Lead' }}
     @endsection
 
-    @section('page_styles')
-
-    @endsection
-
 {{--    @can('lead_create')--}}
     <div style="margin-bottom: 10px;" class="row">
         <div class="col-lg-12 text-right">

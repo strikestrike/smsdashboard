@@ -34,15 +34,9 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="{{ route('admin.campaigns.ongoing') }}" class="nav-link {{ Route::is('admin.campaigns.ongoing') ? 'active' : '' }}">
+                    <a href="{{ route('admin.campaigns.index') }}" class="nav-link {{ Route::is('admin.campaigns.index') ? 'active' : '' }}">
                         <i class="far fa-circle nav-icon text-fuchsia"></i>
-                        <p>Ongoing Campaigns</p>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="{{ route('admin.campaigns.history') }}" class="nav-link {{ Route::is('admin.campaigns.history') ? 'active' : '' }}">
-                        <i class="far fa-circle nav-icon text-indigo"></i>
-                        <p>Campaigns History</p>
+                        <p>Campaigns</p>
                     </a>
                 </li>
             </ul>

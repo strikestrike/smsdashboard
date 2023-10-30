@@ -23,10 +23,16 @@ class CampaignController extends Controller
                 return $row->created_at ? $row->created_at->format('Y-m-d') : '';
             });
 
+            $table->addColumn('placeholder', '&nbsp;');
+            $table->addColumn('servers', '&nbsp;');
+            $table->addColumn('actions', '&nbsp;');
+
+            $table->rawColumns(['placeholder', 'servers', 'actions']);
+
             return $table->make(true);
         }
 
-        return view('admin.campaign.ongoing');
+        return view('admin.campaign.index');
     }
 
     public function create()
@@ -82,11 +88,11 @@ class CampaignController extends Controller
 
     public function ongoing(Request $request)
     {
-        return view('admin.campaign.ongoing');
+        return view('admin.campaign.index');
     }
 
     public function history(Request $request)
     {
-        return view('admin.campaign.history');
+        return view('admin.campaign.index');
     }
 }

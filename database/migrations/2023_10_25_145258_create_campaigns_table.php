@@ -21,7 +21,7 @@ return new class extends Migration
             $table->text('server_ids')->nullable();
             $table->string('template', 153)->nullable();
             $table->dateTime('scheduled_at')->nullable();
-            $table->dateTime('sent_at')->nullable();
+            $table->dateTime('completed_at')->nullable();
             $table->timestamps();
         });
     }
