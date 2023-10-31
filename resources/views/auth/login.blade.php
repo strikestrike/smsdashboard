@@ -6,7 +6,7 @@
         <!-- /.login-logo -->
         <div class="card card-outline card-primary">
             <div class="card-header text-center">
-                <a href="/" class="h1"><b>Admin</b>LTE</a>
+                <a href="/" class="h1"><b>SMS Dashboard</b></a>
             </div>
             <div class="card-body">
                 <p class="login-box-msg">Sign in to start your session</p>
@@ -49,12 +49,12 @@
                         <!-- /.col -->
                     </div>
                 </form>
-                <p class="mb-1">
+                {{--<p class="mb-1">
                     <a href="{{ route('password.request') }}">I forgot my password</a>
                 </p>
                 <p class="mb-0">
                     <a href="{{ route('register') }}" class="text-center">Register a new Account</a>
-                </p>
+                </p>--}}
             </div>
             <!-- /.card-body -->
         </div>
