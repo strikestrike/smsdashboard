@@ -3,9 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\MassDestroyLeadRequest;
+use App\Http\Requests\MassTagLeadRequest;
+use App\Http\Requests\MassExcludeLeadRequest;
 use App\Http\Requests\StoreLeadRequest;
 use App\Http\Requests\UpdateLeadRequest;
+use App\Models\Exclusion;
 use App\Models\Lead;
+use App\Models\SendingServer;
+use App\Models\Tag;
 use Gate;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -22,14 +27,25 @@ class LeadController extends Controller
             $query = Lead::query()->select(sprintf('%s.*', (new Lead())->table));
             $table = Datatables::of($query);
 
-            $table->editColumn('created_at', function ($row) {
-                return $row->created_at ? $row->created_at->format('Y-m-d') : '';
-            });
-
             $table->addColumn('placeholder', '&nbsp;');
             $table->addColumn('used_campaigns', '&nbsp;');
-            $table->addColumn('exclude_campaigns', '&nbsp;');
-            $table->addColumn('actions', function ($row) {
+            $table->addColumn('tag_names', '&nbsp;');
+            $table->addColumn('exclusion_names', '&nbsp;');
+            $table->addColumn('actions', '&nbsp;');
+
+            $table->editColumn('used_campaigns', function ($row) {
+                $campaigns = $row->campaigns()->pluck('name')->implode(', ');
+                return $campaigns;
+            });
+            $table->editColumn('tag_names', function ($row) {
+                $tags = $row->tags->pluck('name')->implode(', ');
+                return $tags;
+            });
+            $table->editColumn('exclusion_names', function ($row) {
+                $exclusions = $row->excludedCampaigns()->pluck('name')->implode(', ');
+                return $exclusions;
+            });
+            $table->editColumn('actions', function ($row) {
                 $viewGate = 'lead_show';
                 $editGate = 'lead_edit';
                 $deleteGate = 'lead_delete';
@@ -43,25 +59,54 @@ class LeadController extends Controller
                     'row'
                 ));
             });
+            $table->editColumn('created_at', function ($row) {
+                return $row->created_at ? $row->created_at->format('Y-m-d') : '';
+            });
 
-            $table->rawColumns(['placeholder', 'used_campaigns', 'exclude_campaigns', 'actions']);
+            $table->rawColumns(['placeholder', 'used_campaigns', 'tag_names', 'exclusion_names', 'actions']);
 
             return $table->make(true);
         }
 
-        return view('admin.leads.index');
+        $tags = Tag::all();
+        $servers = SendingServer::all();
+
+        return view('admin.leads.index', compact('tags', 'servers'));
     }
 
     public function create()
     {
 //        abort_if(Gate::denies('lead_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        return view('admin.leads.create');
+        $tags = Tag::all();
+        $servers = SendingServer::all();
+
+        return view('admin.leads.create', compact('tags', 'servers'));
     }
 
     public function store(StoreLeadRequest $request)
     {
         $lead = Lead::create($request->all());
+
+        // Sync lead tags
+        $tagIds = $request->input('tags');
+
+        if (!empty($tagIds)) {
+            $lead->tags()->attach($tagIds);
+        }
+
+        // Retrieve the selected server IDs
+        $selectedServerIds = $request->input('servers');
+
+        // Add new exclusions with the lead's phone number and selected server IDs
+        if (!empty($selectedServerIds)) {
+            foreach ($selectedServerIds as $serverId) {
+                Exclusion::create([
+                    'lead_number' => $lead->phone,
+                    'sending_server_id' => $serverId,
+                ]);
+            }
+        }
 
         return redirect()->route('admin.leads.index');
     }
@@ -70,12 +115,39 @@ class LeadController extends Controller
     {
 //        abort_if(Gate::denies('lead_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        return view('admin.leads.edit', compact('lead'));
+        $tags = Tag::all();
+        $servers = SendingServer::all();
+
+        return view('admin.leads.edit', compact('lead', 'tags', 'servers'));
     }
 
     public function update(UpdateLeadRequest $request, Lead $lead)
     {
         $lead->update($request->all());
+
+        // Sync lead tags
+        $tagIds = $request->input('tags');
+
+        $lead->tags()->detach();
+        if (!empty($tagIds)) {
+            $lead->tags()->attach($tagIds);
+        }
+
+        // Retrieve the selected server IDs
+        $selectedServerIds = $request->input('servers');
+
+        // Remove existing exclusions for the lead's phone number
+        Exclusion::where('lead_number', $lead->phone)->delete();
+
+        // Add new exclusions with the lead's phone number and selected server IDs
+        if (!empty($selectedServerIds)) {
+            foreach ($selectedServerIds as $serverId) {
+                Exclusion::create([
+                    'lead_number' => $lead->phone,
+                    'sending_server_id' => $serverId,
+                ]);
+            }
+        }
 
         return redirect()->route('admin.leads.index');
     }
@@ -101,6 +173,35 @@ class LeadController extends Controller
         Lead::whereIn('id', request('ids'))->delete();
 
         return response(null, Response::HTTP_NO_CONTENT);
+    }
+
+    public function assignTags(MassTagLeadRequest $request)
+    {
+        $leadIds = $request->input('lead_ids');
+        $tagIds = $request->input('tag_ids');
+
+        Lead::whereIn('id', $leadIds)->each(function ($lead) use ($tagIds) {
+            $lead->tags()->detach();
+            $lead->tags()->attach($tagIds);
+        });
+
+        return response()->json(['message' => 'Tags assigned successfully']);
+    }
+
+    public function assignExclusions(MassExcludeLeadRequest $request)
+    {
+        $leadIds = $request->input('lead_ids');
+        $serverIds = $request->input('server_ids');
+
+        foreach ($leadIds as $leadId) {
+            $lead = Lead::find($leadId);
+            $lead->servers()->detach();
+            foreach ($serverIds as $serverId) {
+                $lead->servers()->attach($serverId);
+            }
+        }
+
+        return response()->json(['message' => 'Exclusions assigned successfully']);
     }
 
 }

@@ -44,28 +44,24 @@
                     <span class="help-block">{{ trans('cruds.lead.fields.origin_helper') }}</span>
                 </div>
                 <div class="form-group">
-                    <label for="tag_id">{{ trans('cruds.lead.fields.tags') }}</label>
-                    <input class="form-control {{ $errors->has('tag_id') ? 'is-invalid' : '' }}" type="text" name="tag_id" id="tag_id" value="{{ old('tag_id', '') }}">
-                    @if($errors->has('tag_id'))
-                        <span class="text-danger">{{ $errors->first('tag_id') }}</span>
-                    @endif
-                    <span class="help-block">{{ trans('cruds.lead.fields.tags_helper') }}</span>
+                    <label for="tags">{{ trans('cruds.tag.title') }}</label>
+                    <select class="select2 form-control {{ $errors->has('tags') ? 'is-invalid' : '' }}" multiple="multiple" name="tags[]" data-placeholder="Select Tags" style="width: 100%;">
+                        @foreach($tags as $tag)
+                            <option value="{{ $tag->id }}" {{ in_array($tag->id, old('tags', [])) ? 'selected' : '' }}>
+                                {{ $tag->name }}
+                            </option>
+                        @endforeach
+                    </select>
                 </div>
-                <div class="form-group">
-                    <label for="used_campaigns_ids">{{ trans('cruds.lead.fields.used_campaigns') }}</label>
-                    <input class="form-control {{ $errors->has('used_campaigns_ids') ? 'is-invalid' : '' }}" type="text" name="used_campaigns_ids" id="used_campaigns_ids" value="{{ old('used_campaigns_ids', '') }}">
-                    @if($errors->has('used_campaigns_ids'))
-                        <span class="text-danger">{{ $errors->first('used_campaigns_ids') }}</span>
-                    @endif
-                    <span class="help-block">{{ trans('cruds.lead.fields.used_campaigns_helper') }}</span>
-                </div>
-                <div class="form-group">
-                    <label for="exclude_campaigns_ids">{{ trans('cruds.lead.fields.exclude_campaigns') }}</label>
-                    <input class="form-control {{ $errors->has('exclude_campaigns_ids') ? 'is-invalid' : '' }}" type="text" name="exclude_campaigns_ids" id="exclude_campaigns_ids" value="{{ old('used_campaigns_ids', '') }}">
-                    @if($errors->has('exclude_campaigns_ids'))
-                        <span class="text-danger">{{ $errors->first('exclude_campaigns_ids') }}</span>
-                    @endif
-                    <span class="help-block">{{ trans('cruds.lead.fields.exclude_campaigns_helper') }}</span>
+                <div class="form-group row">
+                    <label for="servers">{{ trans('cruds.exclusion.title') }}</label>
+                    <select class="select2 form-control {{ $errors->has('servers') ? 'is-invalid' : '' }}" multiple="multiple" name="servers[]" data-placeholder="Select Servers" style="width: 100%;">
+                        @foreach($servers as $server)
+                            <option value="{{ $server->id }}" {{ $lead->excludedServers->contains('id', $server->id) ? 'selected' : '' }}>
+                                {{ $server->name }}
+                            </option>
+                        @endforeach
+                    </select>
                 </div>
                 <div class="form-group">
                     <button class="btn btn-danger" type="submit">

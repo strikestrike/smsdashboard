@@ -81,10 +81,10 @@ return [
             'origin_helper'             => ' ',
             'tags'                      => 'Tags',
             'tags_helper'               => ' ',
-            'used_campaigns'            => 'Campaign Used',
+            'exclusions'                => 'Exclusions',
+            'exclusions_helper'         => ' ',
+            'used_campaigns'            => 'Campaigns Used',
             'used_campaigns_helper'     => ' ',
-            'exclude_campaigns'         => 'Campaign Exclusion',
-            'exclude_campaigns_helper'  => ' ',
             'created_at'                => 'Created at',
             'created_at_helper'         => ' ',
             'updated_at'                => 'Updated at',
@@ -92,6 +92,8 @@ return [
             'deleted_at'                => 'Deleted at',
             'deleted_at_helper'         => ' ',
         ],
+        'assign_tags'                   => 'Assign Tags',
+        'assign_exclusions'             => 'Assign Exclusions',
     ],
     'campaign' => [
         'title'          => 'Campaigns',
@@ -121,6 +123,18 @@ return [
             'updated_at_helper'         => ' ',
             'deleted_at'                => 'Deleted at',
             'deleted_at_helper'         => ' ',
+        ],
+    ],
+    'tag' => [
+        'title'          => 'Tags',
+        'title_singular' => 'Tag',
+        'fields'         => [
+        ],
+    ],
+    'exclusion' => [
+        'title'          => 'Exclusions',
+        'title_singular' => 'Exclusion',
+        'fields'         => [
         ],
     ],
 ];

@@ -11,16 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('campaigns', function (Blueprint $table) {
+        Schema::create('exclusions', function (Blueprint $table) {
             $table->id();
-            $table->string('name', 255);
-            $table->enum('channel', ['sms', 'email'])->default('sms');
-            $table->text('target_countries')->nullable();
-            $table->string('template', 153)->nullable();
-            $table->dateTime('scheduled_at')->nullable();
-            $table->dateTime('completed_at')->nullable();
+            $table->string('lead_number', 255);
+            $table->unsignedBigInteger('sending_server_id');
             $table->timestamps();
             $table->softDeletes();
+
+            // Define foreign key constraints
+            $table->foreign('sending_server_id')->references('id')->on('sending_servers');
         });
     }
 
@@ -29,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('campaign');
+        Schema::dropIfExists('exclusions');
     }
 };

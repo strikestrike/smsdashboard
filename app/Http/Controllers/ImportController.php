@@ -11,7 +11,7 @@ use Validator;
 
 class ImportController extends Controller
 {
-    
+
     public function index()
     {
         return view('admin.feeds.index');
@@ -25,11 +25,11 @@ class ImportController extends Controller
 
         $validator = Validator::make($request->all(), $rules);
         // process the form
-        if ($validator->fails()) 
+        if ($validator->fails())
         {
             return redirect(route('admin.feeds.index'))->withErrors($validator);
         }
-        else 
+        else
         {
             try {
                 Excel::import(new LeadsImport, request()->file('file'));
@@ -39,6 +39,6 @@ class ImportController extends Controller
                 Session::flash('danger', $e->getMessage());
                 return redirect(route('admin.feeds.index'));
             }
-        } 
-    } 
+        }
+    }
 }

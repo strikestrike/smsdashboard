@@ -17,10 +17,10 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->string('phone')->nullable();
             $table->string('origin')->nullable();
-            $table->integer('tag_id')->nullable();
-            $table->text('used_campaigns_ids')->nullable();
-            $table->text('exclude_campaigns_ids')->nullable();
             $table->timestamps();
+            $table->softDeletes();
+
+            $table->index(['email', 'phone', 'origin']);
         });
     }
 

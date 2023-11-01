@@ -11,14 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('campaigns', function (Blueprint $table) {
+        Schema::create('tags', function (Blueprint $table) {
             $table->id();
             $table->string('name', 255);
-            $table->enum('channel', ['sms', 'email'])->default('sms');
-            $table->text('target_countries')->nullable();
-            $table->string('template', 153)->nullable();
-            $table->dateTime('scheduled_at')->nullable();
-            $table->dateTime('completed_at')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
@@ -29,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('campaign');
+        Schema::dropIfExists('tags');
     }
 };

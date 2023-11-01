@@ -48,13 +48,13 @@
         function UploadProcess() {
             //Reference the FileUpload element.
             var fileUpload = document.getElementById("fileUpload");
-    
+
             //Validate whether File is valid Excel file.
             var regex = /^([a-zA-Z0-9\s_\\.\-:])+(.xls|.xlsx)$/;
             if (regex.test(fileUpload.value.toLowerCase())) {
                 if (typeof (FileReader) != "undefined") {
                     var reader = new FileReader();
-    
+
                     //For Browsers other than IE.
                     if (reader.readAsBinaryString) {
                         reader.onload = function (e) {
@@ -86,58 +86,65 @@
             var workbook = XLSX.read(data, {
                 type: 'binary'
             });
-    
+
             //get the name of First Sheet.
             var Sheet = workbook.SheetNames[0];
-    
+
             //Read all rows from First Sheet into an JSON array.
             var excelRows = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[Sheet]);
-    
+
             //Create a HTML Table element.
             var myTable  = document.createElement("table");
             myTable.border = "1";
-    
+
             //Add the header row.
             var row = myTable.insertRow(-1);
-    
-            //Add the header cells.    
+
+            //Add the header cells.
             headerCell = document.createElement("TH");
             headerCell.innerHTML = "Name";
             row.appendChild(headerCell);
-    
+
             headerCell = document.createElement("TH");
             headerCell.innerHTML = "Email";
             row.appendChild(headerCell);
-            
+
             headerCell = document.createElement("TH");
             headerCell.innerHTML = "Phone";
             row.appendChild(headerCell);
-            
+
             headerCell = document.createElement("TH");
             headerCell.innerHTML = "Origin";
             row.appendChild(headerCell);
-    
-    
+
+            headerCell = document.createElement("TH");
+            headerCell.innerHTML = "Tag";
+            row.appendChild(headerCell);
+
+
             //Add the data rows from Excel file.
             for (var i = 0; i < excelRows.length; i++) {
                 //Add the data row.
                 var row = myTable.insertRow(-1);
-    
-                //Add the data cells.    
+
+                //Add the data cells.
                 cell = row.insertCell(-1);
-                cell.innerHTML = excelRows[i].Name;
-    
+                cell.innerHTML = excelRows[i].Name ?? '';
+
                 cell = row.insertCell(-1);
-                cell.innerHTML = excelRows[i].Email;
-                
+                cell.innerHTML = excelRows[i].Email ?? '';
+
                 cell = row.insertCell(-1);
-                cell.innerHTML = excelRows[i].Phone;
-                
+                cell.innerHTML = excelRows[i].Phone ?? '';
+
                 cell = row.insertCell(-1);
-                cell.innerHTML = excelRows[i].Origin;
+                cell.innerHTML = excelRows[i].Origin ?? '';
+
+                cell = row.insertCell(-1);
+                cell.innerHTML = excelRows[i].Tag ?? '';
             }
-            
-    
+
+
             var ExcelTable = document.getElementById("ExcelTable");
             ExcelTable.innerHTML = "";
             ExcelTable.appendChild(myTable);

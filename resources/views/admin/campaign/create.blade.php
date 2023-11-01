@@ -125,13 +125,4 @@
         </div>
     </div>
 
-    @section('page_scripts')
-    <script src="{{ asset('admin/plugins/select2/js/select2.full.min.js') }}"></script>
-    <script>
-        $(function () {
-            $('.select2').select2()
-        });
-    </script>
-    @endsection
-
 </x-admin>

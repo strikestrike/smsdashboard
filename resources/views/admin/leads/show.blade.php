@@ -57,6 +57,22 @@
                             {{ $lead->origin }}
                         </td>
                     </tr>
+                    <tr>
+                        <th>
+                            {{ __('cruds.lead.fields.tags') }}
+                        </th>
+                        <td>
+                            {{ $lead->tags->pluck('name')->implode(', ') }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            {{ __('cruds.lead.fields.exclusions') }}
+                        </th>
+                        <td>
+                            {{ $lead->excludedServers()->pluck('name')->implode(', ') }}
+                        </td>
+                    </tr>
                 </tbody>
             </table>
             <div class="form-group">

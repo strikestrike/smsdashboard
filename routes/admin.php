@@ -17,6 +17,8 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
     Route::resource('user',UserController::class);
 
     Route::delete('leads/destroy', [LeadController::class, 'massDestroy'])->name('leads.massDestroy');
+    Route::post('campaigns/assignTags', [LeadController::class, 'assignTags'])->name('leads.assignTags');
+    Route::post('campaigns/assignExclusions', [LeadController::class, 'assignExclusions'])->name('leads.assignExclusions');
     Route::resource('leads', LeadController::class);
 
     Route::get('campaigns/ongoing', [CampaignController::class, 'ongoing'])->name('campaigns.ongoing');
