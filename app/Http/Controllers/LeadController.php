@@ -42,7 +42,7 @@ class LeadController extends Controller
                 return $tags;
             });
             $table->editColumn('exclusion_names', function ($row) {
-                $exclusions = $row->excludedCampaigns()->pluck('name')->implode(', ');
+                $exclusions = $row->excludedServers()->pluck('name')->implode(', ');
                 return $exclusions;
             });
             $table->editColumn('actions', function ($row) {

@@ -55,10 +55,10 @@ class Lead extends Model
             $query->whereIn('tag_id', $this->tags->pluck('id'));
         })
         ->whereDoesntHave('exclusions', function ($query) use ($exclusionIds) {
-            $query->whereIn('exclusion_id', $exclusionIds);
+            $query->whereIn('exclusions.id', $exclusionIds);
         })
         ->whereDoesntHave('sendingServers.exclusions', function ($query) use ($exclusionIds) {
-            $query->whereIn('exclusion_id', $exclusionIds);
+            $query->whereIn('exclusions.id', $exclusionIds);
         });
     }
 
@@ -77,10 +77,10 @@ class Lead extends Model
         $exclusionIds = Exclusion::where('lead_number', $leadPhone)->pluck('id')->toArray();
 
         return Campaign::whereHas('sendingServers.exclusions', function ($query) use ($exclusionIds) {
-            $query->whereIn('exclusion_id', $exclusionIds);
+            $query->whereIn('exclusions.id', $exclusionIds);
         })
-        ->whereHas('exclusions', function ($query) use ($exclusionIds) {
-            $query->whereIn('exclusion_id', $exclusionIds);
+        ->orWhereHas('exclusions', function ($query) use ($exclusionIds) {
+            $query->whereIn('exclusions.id', $exclusionIds);
         });
     }
 }

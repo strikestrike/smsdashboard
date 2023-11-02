@@ -57,7 +57,7 @@
                     <label for="servers">{{ trans('cruds.exclusion.title') }}</label>
                     <select class="select2 form-control {{ $errors->has('servers') ? 'is-invalid' : '' }}" multiple="multiple" name="servers[]" data-placeholder="Select Servers" style="width: 100%;">
                         @foreach($servers as $server)
-                            <option value="{{ $server->id }}" {{ $lead->excludedServers->contains('id', $server->id) ? 'selected' : '' }}>
+                            <option value="{{ $server->id }}" {{ in_array($tag->id, old('servers', [])) ? 'selected' : '' }}>
                                 {{ $server->name }}
                             </option>
                         @endforeach

@@ -1,11 +1,11 @@
 <x-admin>
     @section('title')
-        {{ 'Lead' }}
+        {{ __('cruds.lead.title_singular') }}
     @endsection
 
 <div class="card">
     <div class="card-header">
-        <h4>{{ __('global.show') }} {{ __('cruds.lead.title') }}</h4>
+        <h4>{{ __('global.show') }} {{ __('cruds.lead.title_singular') }}</h4>
     </div>
 
     <div class="card-body">

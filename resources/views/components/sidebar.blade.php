@@ -42,7 +42,7 @@
             </ul>
         </li>
         <li class="nav-item">
-            <a href="{{ route('admin.mailservers') }}" class="nav-link {{ Route::is('admin.mailservers') ? 'active' : '' }}">
+            <a href="{{ route('admin.sendingservers.index') }}" class="nav-link {{ Route::is('admin.sendingservers.index') ? 'active' : '' }}">
                 <i class="nav-icon fas fa-external-link-square-alt"></i>
                 <p>
                     Sending Servers

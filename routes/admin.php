@@ -4,7 +4,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\LeadController;
 use App\Http\Controllers\CampaignController;
-use App\Http\Controllers\MailServerController;
+use App\Http\Controllers\SendingServerController;
 use App\Http\Controllers\ImportController;
 use Illuminate\Support\Facades\Route;
 
@@ -26,7 +26,8 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
     Route::delete('campaigns/destroy', [CampaignController::class, 'massDestroy'])->name('campaigns.massDestroy');
     Route::resource('campaigns', CampaignController::class);
 
-    Route::get('/mailservers',[MailServerController::class,'index'])->name('mailservers');
+    Route::delete('sendingservers/destroy', [SendingServerController::class, 'massDestroy'])->name('sendingservers.massDestroy');
+    Route::resource('sendingservers', SendingServerController::class);
 
     Route::get('feeds',[ImportController::class,'index'])->name('feeds.index');
     Route::post('feeds/postUploadExcel',[ImportController::class,'postUploadExcel'])->name('feeds.upload');

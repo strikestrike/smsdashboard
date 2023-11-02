@@ -21,8 +21,8 @@ class Exclusion extends Model
     ];
 
     protected $fillable = [
-        'name',
-        'type',
+        'lead_number',
+        'sending_server_id',
     ];
 
     protected function serializeDate(DateTimeInterface $date)

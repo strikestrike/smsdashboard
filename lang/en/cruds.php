@@ -137,4 +137,24 @@ return [
         'fields'         => [
         ],
     ],
+    'sendingServer' => [
+        'title'          => 'Sending Servers',
+        'title_singular' => 'Sending Server',
+        'fields'         => [
+            'id'                        => 'ID',
+            'id_helper'                 => ' ',
+            'name'                      => 'Name',
+            'name_helper'               => ' ',
+            'sender_number'             => 'Sender Number',
+            'sender_number_helper'      => ' ',
+            'sender_api'                => 'Sender API',
+            'sender_api_helper'         => ' ',
+            'created_at'                => 'Created at',
+            'created_at_helper'         => ' ',
+            'updated_at'                => 'Updated at',
+            'updated_at_helper'         => ' ',
+            'deleted_at'                => 'Deleted at',
+            'deleted_at_helper'         => ' ',
+        ],
+    ],
 ];
