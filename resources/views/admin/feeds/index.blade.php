@@ -20,24 +20,28 @@
         </div>
     @endif
 
-    <div class="card">
-        <div class="card-header">
-            <h3 class="card-title">Imports</h3>
-        </div>
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Imports</h3>
+                </div>
 
-        <div class="card-body">
-            <p class="text-primary">
-                <a href="{{ asset('Leads.xlsx') }}">Download Excel Template <i class="fas fa-download"></i></a>
-            </p>
-            <form action="{{ route('admin.feeds.upload') }}" method="POST" enctype="multipart/form-data">
-                @csrf
-                <input type="file" name="file" id="fileUpload"  class="mb-4 border-0" onchange="UploadProcess()">
-                <br>
-                <button class="btn btn-success mb-4">Upload</button>
-            </form>
-            <div id="ExcelTable"></div>
-        </div>
+                <div class="card-body">
+                    <p class="text-primary">
+                        <a href="{{ asset('Leads.xlsx') }}">Download Excel Template <i class="fas fa-download"></i></a>
+                    </p>
+                    <form action="{{ route('admin.feeds.upload') }}" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        <input type="file" name="file" id="fileUpload"  class="mb-4 border-0" onchange="UploadProcess()">
+                        <br>
+                        <button class="btn btn-success mb-4">Upload</button>
+                    </form>
+                    <div id="ExcelTable"></div>
+                </div>
 
+            </div>
+        </div>
     </div>
 
     @section('page_scripts')
@@ -95,6 +99,7 @@
 
             //Create a HTML Table element.
             var myTable  = document.createElement("table");
+            myTable.setAttribute("class", "table");
             myTable.border = "1";
 
             //Add the header row.
@@ -102,22 +107,32 @@
 
             //Add the header cells.
             headerCell = document.createElement("TH");
+            headerCell.setAttribute('scope', 'col');
+            headerCell.innerHTML = "#";
+            row.appendChild(headerCell);
+
+            headerCell = document.createElement("TH");
+            headerCell.setAttribute('scope', 'col');
             headerCell.innerHTML = "Name";
             row.appendChild(headerCell);
 
             headerCell = document.createElement("TH");
+            headerCell.setAttribute('scope', 'col');
             headerCell.innerHTML = "Email";
             row.appendChild(headerCell);
 
             headerCell = document.createElement("TH");
+            headerCell.setAttribute('scope', 'col');
             headerCell.innerHTML = "Phone";
             row.appendChild(headerCell);
 
             headerCell = document.createElement("TH");
+            headerCell.setAttribute('scope', 'col');
             headerCell.innerHTML = "Origin";
             row.appendChild(headerCell);
 
             headerCell = document.createElement("TH");
+            headerCell.setAttribute('scope', 'col');
             headerCell.innerHTML = "Tag";
             row.appendChild(headerCell);
 
@@ -128,6 +143,9 @@
                 var row = myTable.insertRow(-1);
 
                 //Add the data cells.
+                cell = row.insertCell(-1);
+                cell.innerHTML = i + 1;
+
                 cell = row.insertCell(-1);
                 cell.innerHTML = excelRows[i].Name ?? '';
 

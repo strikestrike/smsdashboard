@@ -38,6 +38,7 @@
                 <div class="form-group">
                     <label for="origin">{{ trans('cruds.lead.fields.origin') }}</label>
                     <select class="select2 form-control {{ $errors->has('origin') ? 'is-invalid' : '' }}" name="origin" id="v" data-placeholder="Select Country" style="width: 100%;">
+                        <option></option>
                         @foreach($countries as $country)
                             <option value="{{ $country->id }}" {{ $country->id == old('origin', '') ? 'selected' : '' }}>{{ $country->name }}</option>
                         @endforeach

@@ -1,6 +1,6 @@
 <x-admin>
     @section('title')
-    {{ 'Lead' }}
+    {{ __('cruds.lead.title') }}
     @endsection
 
 {{--    @can('lead_create')--}}
