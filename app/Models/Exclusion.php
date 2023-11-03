@@ -23,6 +23,7 @@ class Exclusion extends Model
     protected $fillable = [
         'lead_number',
         'sending_server_id',
+        'campaign_id',
     ];
 
     protected function serializeDate(DateTimeInterface $date)
@@ -33,5 +34,15 @@ class Exclusion extends Model
     public function leads()
     {
         return $this->belongsToMany(Lead::class, 'lead_exclusion');
+    }
+
+    public function server()
+    {
+        return $this->belongsTo(SendingServer::class);
+    }
+
+    public function campaign()
+    {
+        return $this->belongsTo(Campaign::class);
     }
 }

@@ -29,7 +29,7 @@ class UpdateCampaignRequest extends FormRequest
             'name' => [
                 'string',
                 'required',
-                'unique:campaign,name,' . request()->route('campaign')->id,
+                'unique:campaigns,name,' . request()->route('campaign')->id,
             ],
         ];
     }

@@ -15,11 +15,13 @@ return new class extends Migration
             $table->id();
             $table->string('lead_number', 255);
             $table->unsignedBigInteger('sending_server_id');
+            $table->unsignedBigInteger('campaign_id');
             $table->timestamps();
             $table->softDeletes();
 
             // Define foreign key constraints
             $table->foreign('sending_server_id')->references('id')->on('sending_servers');
+            $table->foreign('campaign_id')->references('id')->on('campaigns');
         });
     }
 

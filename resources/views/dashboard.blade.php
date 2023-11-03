@@ -3,10 +3,6 @@
     {{ 'Dashboard' }}
     @endsection
 
-    @section('page_styles')
-    <link rel="stylesheet" href="{{ asset('admin/plugins/daterangepicker/daterangepicker.css') }}">
-    @endsection
-
     <div class="row">
         <div class="col-lg-12 col-12 my-2">
             <button type="button" class="btn btn-default float-right" id="daterange-btn">
@@ -98,8 +94,6 @@
         </div>
     </div>
     @section('page_scripts')
-    <script src="{{ asset('admin/plugins/moment/moment.min.js') }}"></script>
-    <script src="{{ asset('admin/plugins/daterangepicker/daterangepicker.js') }}"></script>
     <script>
         $(function() {
             $('#daterange-btn').daterangepicker({

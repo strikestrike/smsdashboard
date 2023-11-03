@@ -68,33 +68,6 @@
         </div>
     </div>
 
-    <div class="modal fade" id="modal-exclusions">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">Assign Exculsions</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="form-group row">
-                        <label for="servers">{{ trans('cruds.exclusion.title') }}</label>
-                        <select class="select2 form-control" multiple="multiple" name="servers" id="servers" data-placeholder="Select Servers" style="width: 100%;" required>
-                        @foreach($servers as $key => $server)
-                            <option value="{{ $server->id }}">{{ $server->name }}</option>
-                        @endforeach
-                        </select>
-                    </div>
-                </div>
-                <div class="modal-footer justify-content-between">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" id="save_exclusions">Save</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
     @section('page_scripts')
     <script type="text/javascript">
         $(function () {
@@ -157,28 +130,6 @@
                     });
             });
 
-            $("#save_exclusions").on("click", function () {
-                var sectedLeads = $('input[name=selected_lead_ids]').val();
-                if (sectedLeads.length === 0) {
-                    alert('{{ trans('global.datatables.zero_selected') }}')
-                    return
-                }
-                var selectedServers = $("#servers").select2('val');
-                $.ajax({
-                    headers: {'x-csrf-token': _token},
-                    method: 'POST',
-                    url: "{{ route('admin.leads.assignExclusions') }}",
-                    data: { lead_ids: sectedLeads.split(','), server_ids: selectedServers, _method: 'POST' }})
-                    .done(function (response) {
-                        Toast.fire({
-                            icon: 'success',
-                            title: response.message
-                        })
-                        table.ajax.reload();
-                        $("#modal-exclusions").modal("hide");
-                    });
-            });
-
             let tagsButtonTrans = '{{ trans('cruds.lead.assign_tags') }}';
             let tagsButton = {
                 text: tagsButtonTrans,
@@ -199,27 +150,6 @@
                 }
             }
             dtButtons.push(tagsButton);
-
-            let exclusionsButtonTrans = '{{ trans('cruds.lead.assign_exclusions') }}';
-            let exclusionsButton = {
-                text: exclusionsButtonTrans,
-                className: 'btn-warning',
-                action: function (e, dt, node, config) {
-                    var ids = $.map(dt.rows({ selected: true }).data(), function (entry) {
-                        return entry.id
-                    });
-                    $('input[name=selected_lead_ids]').val(ids.join(','));
-
-                    if (ids.length === 0) {
-                        alert('{{ trans('global.datatables.zero_selected') }}')
-                        return
-                    }
-
-                    $("#servers").val(null).trigger("change");
-                    $("#modal-exclusions").modal("show");
-                }
-            }
-            dtButtons.push(exclusionsButton)
 {{--                @endcan--}}
 
             let dtOverrideGlobals = {

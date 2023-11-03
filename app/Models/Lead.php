@@ -45,47 +45,29 @@ class Lead extends Model
 
     public function excludedServers()
     {
-        return SendingServer::whereHas('exclusions', function ($query) {
-            $query->where('lead_number', $this->phone);
-        });
+        return $this->belongsToMany(SendingServer::class, 'exclusions', 'lead_number', 'sending_server_id', 'phone', 'id');
+    }
+
+    public function unsubscribedCampaigns()
+    {
+        return $this->belongsToMany(Campaign::class, 'exclusions', 'lead_number', 'campaign_id', 'phone', 'id');
     }
 
     public function campaigns()
     {
         $leadPhone = $this->phone; // Get the lead's phone number
 
-        $exclusionIds = Exclusion::where('lead_number', $leadPhone)->pluck('id')->toArray();
-
         return Campaign::whereHas('tags', function ($query) {
             $query->whereIn('tag_id', $this->tags->pluck('id'));
-        })
-        ->whereDoesntHave('exclusions', function ($query) use ($exclusionIds) {
-            $query->whereIn('exclusions.id', $exclusionIds);
-        })
-        ->whereDoesntHave('sendingServers.exclusions', function ($query) use ($exclusionIds) {
-            $query->whereIn('exclusions.id', $exclusionIds);
-        });
+        })->whereHas('sendingServers', function ($query) use ($leadPhone) {
+            $query->whereDoesntHave('exclusions', function ($innerQuery) use ($leadPhone) {
+                $innerQuery->where('lead_number', $leadPhone);
+            });
+        })->has('sendingServers', '>=', 1);
     }
 
     public function ongoingCampaigns()
     {
-        return $this->campaigns()
-            ->whereNotNull('scheduled_at') // Ensure a campaign has a scheduled date
-            ->whereNull('completed_at') // The campaign should not be completed
-            ->where('scheduled_at', '<=', now()); // Campaign scheduled to be sent before or at the current time
-    }
-
-    public function excludedCampaigns()
-    {
-        $leadPhone = $this->phone;
-
-        $exclusionIds = Exclusion::where('lead_number', $leadPhone)->pluck('id')->toArray();
-
-        return Campaign::whereHas('sendingServers.exclusions', function ($query) use ($exclusionIds) {
-            $query->whereIn('exclusions.id', $exclusionIds);
-        })
-        ->orWhereHas('exclusions', function ($query) use ($exclusionIds) {
-            $query->whereIn('exclusions.id', $exclusionIds);
-        });
+        return $this->campaigns()->whereNull('completed_at');
     }
 }

@@ -11,12 +11,13 @@
                 </div>
 
                 <div class="card-body p-5">
-                    <form class="form-horizontal" method="POST" action="{{ route("admin.campaigns.store") }}" enctype="multipart/form-data">
+                    <form class="form-horizontal" method="POST" action="{{ route("admin.campaigns.update", [$campaign->id]) }}" enctype="multipart/form-data">
+                        @method('PUT')
                         @csrf
                         <div class="form-group row">
                             <label class="col-sm-2 col-form-label text-right required" for="name">{{ trans('cruds.campaign.fields.name') }}</label>
                             <div class="col-sm-10">
-                                <input class="form-control {{ $errors->has('name') ? 'is-invalid' : '' }}" type="text" name="name" id="name" value="{{ old('name', '') }}" placeholder="Campaign Name" required>
+                                <input class="form-control {{ $errors->has('name') ? 'is-invalid' : '' }}" type="text" name="name" id="name" value="{{ old('name', $campaign->name) }}" placeholder="Campaign Name" required>
                                 @if($errors->has('name'))
                                     <span class="text-danger">{{ $errors->first('name') }}</span>
                                 @endif
@@ -28,7 +29,7 @@
                             <div class="col-sm-10">
                                 <select class="select2 form-control {{ $errors->has('tags') ? 'is-invalid' : '' }}" multiple="multiple" name="tags[]" data-placeholder="Select Tags" style="width: 100%;">
                                     @foreach($tags as $tag)
-                                        <option value="{{ $tag->id }}" {{ in_array($tag->id, old('tags', [])) ? 'selected' : '' }}>{{ $tag->name }}</option>
+                                        <option value="{{ $tag->id }}" {{ $campaign->tags->contains('id', $tag->id) ? 'selected' : '' }}>{{ $tag->name }}</option>
                                     @endforeach
                                 </select>
                                 @if($errors->has('tags'))
@@ -43,7 +44,7 @@
                                 <select class="select2 form-control {{ $errors->has('counties') ? 'is-invalid' : '' }}" multiple="multiple" name="countries[]" id="v" data-placeholder="Select Countries" style="width: 100%;">
                                     <option></option>
                                     @foreach($countries as $country)
-                                        <option value="{{ $country->id }}" {{ in_array($country->id, old('counties', [])) ? 'selected' : '' }}>{{ $country->name }}</option>
+                                        <option value="{{ $country->id }}" {{ $campaign->countries->contains('id', $country->id) ? 'selected' : '' }}>{{ $country->name }}</option>
                                     @endforeach
                                 </select>
                                 @if($errors->has('counties'))
@@ -57,7 +58,7 @@
                             <div class="col-sm-10">
                                 <select class="select2 form-control {{ $errors->has('exclusions') ? 'is-invalid' : '' }}" multiple="multiple" name="exclusions[]" data-placeholder="Select Servers" style="width: 100%;">
                                     @foreach($servers as $server)
-                                        <option value="{{ $server->id }}" {{ in_array($tag->id, old('exclusions', [])) ? 'selected' : '' }}>{{ $server->name }}</option>
+                                        <option value="{{ $server->id }}" {{ $campaign->sendingServers->contains('id', $server->id) ? 'selected' : '' }}>{{ $server->name }}</option>
                                     @endforeach
                                 </select>
                                 @if($errors->has('exclusions'))
@@ -74,7 +75,7 @@
                             <div class="col-sm-10">
                                 <select class="select2 form-control {{ $errors->has('servers') ? 'is-invalid' : '' }}" multiple="multiple" name="servers[]" data-placeholder="Select Servers" style="width: 100%;">
                                     @foreach($servers as $server)
-                                        <option value="{{ $server->id }}" {{ in_array($tag->id, old('servers', [])) ? 'selected' : '' }}>{{ $server->name }}</option>
+                                        <option value="{{ $server->id }}" {{ $campaign->exclusions->contains('id', $server->id) ? 'selected' : '' }}>{{ $server->name }}</option>
                                     @endforeach
                                 </select>
                                 @if($errors->has('servers'))
@@ -86,10 +87,10 @@
                         <div class="form-group row">
                             <label class="col-sm-2 col-form-label text-right required" for="template">{{ trans('cruds.campaign.fields.template') }}</label>
                             <div class="col-sm-10">
-                                <textarea class="form-control" name="template" id="template" rows="3" placeholder="Type your message">{{ old('template', '') }}</textarea>
+                                <textarea class="form-control" name="template" id="template" rows="3" placeholder="Type your message">{{ old('template', $campaign->template) }}</textarea>
                             </div>
                             <div class="col-sm-12">
-                                <p class="text-muted text-right">Characters: <span id="template_length">0</span>/<span id="max_length">156</span></p>
+                                <p class="text-muted text-right">Characters: <span id="template_length">58</span>/<span id="max_length">156</span></p>
                             </div>
                         </div>
                         <div class="form-group row">
@@ -145,30 +146,6 @@
 
     @section('page_scripts')
     <script>
-        function calculateUTF8StringLength(text) {
-            let length = 0;
-
-            for (let i = 0; i < text.length; i++) {
-                const charCode = text.charCodeAt(i);
-
-                if (charCode <= 0x7F) {
-                    // ASCII character (1 byte in UTF-8)
-                    length += 1;
-                } else if (charCode <= 0x7FF) {
-                    // 2-byte character in UTF-8
-                    length += 2;
-                } else if (charCode <= 0xFFFF) {
-                    // 3-byte character in UTF-8
-                    length += 3;
-                } else if (charCode <= 0x10FFFF) {
-                    // 4-byte character in UTF-8
-                    length += 4;
-                }
-            }
-
-            return length;
-        }
-
         $(function() {
             $('#scheduledatepicker').datetimepicker({ icons: { time: 'far fa-clock' } });
             $('#save_schedule_date').click(function () {
@@ -183,15 +160,7 @@
                 $('[name=scheduled_at]').val(formattedDate);
                 console.log(schedule_date, formattedDate);
                 $('#scheduleDateModal').modal('hide');
-            });
-
-            // Add an input event listener to the textarea
-            $('#template').on('input', function() {
-                const text = $(this).val();
-                const utf8Length = calculateUTF8StringLength(text);
-
-                $('#template_length').html(utf8Length)
-            });
+            })
         });
     </script>
     @endsection

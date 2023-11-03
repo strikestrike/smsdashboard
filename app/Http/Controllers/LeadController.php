@@ -48,7 +48,7 @@ class LeadController extends Controller
                 return $tags;
             });
             $table->editColumn('exclusion_names', function ($row) {
-                $exclusions = $row->excludedServers()->pluck('name')->implode(', ');
+                $exclusions = $row->excludedServers->pluck('name')->implode(', ');
                 return $exclusions;
             });
             $table->editColumn('actions', function ($row) {
@@ -110,19 +110,6 @@ class LeadController extends Controller
             $lead->tags()->attach($tagIds);
         }
 
-        // Retrieve the selected server IDs
-        $selectedServerIds = $request->input('servers');
-
-        // Add new exclusions with the lead's phone number and selected server IDs
-        if (!empty($selectedServerIds)) {
-            foreach ($selectedServerIds as $serverId) {
-                Exclusion::create([
-                    'lead_number' => $lead->phone,
-                    'sending_server_id' => $serverId,
-                ]);
-            }
-        }
-
         return redirect()->route('admin.leads.index');
     }
 
@@ -155,22 +142,6 @@ class LeadController extends Controller
         $lead->tags()->detach();
         if (!empty($tagIds)) {
             $lead->tags()->attach($tagIds);
-        }
-
-        // Retrieve the selected server IDs
-        $selectedServerIds = $request->input('servers');
-
-        // Remove existing exclusions for the lead's phone number
-        Exclusion::where('lead_number', $lead->phone)->delete();
-
-        // Add new exclusions with the lead's phone number and selected server IDs
-        if (!empty($selectedServerIds)) {
-            foreach ($selectedServerIds as $serverId) {
-                Exclusion::create([
-                    'lead_number' => $lead->phone,
-                    'sending_server_id' => $serverId,
-                ]);
-            }
         }
 
         return redirect()->route('admin.leads.index');

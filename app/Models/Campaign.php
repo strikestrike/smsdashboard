@@ -25,7 +25,6 @@ class Campaign extends Model
     protected $fillable = [
         'name',
         'channel',
-        'target_countries',
         'template',
         'scheduled_at',
         'completed_at',
@@ -41,13 +40,24 @@ class Campaign extends Model
         return $this->belongsToMany(Tag::class, 'campaign_tag');
     }
 
+    public function countries()
+    {
+        return $this->belongsToMany(Country::class, 'campaign_country');
+    }
+
     public function exclusions()
     {
-        return $this->belongsToMany(Exclusion::class, 'campaign_exclusion');
+        return $this->belongsToMany(SendingServer::class, 'campaign_exclusion');
     }
 
     public function sendingServers()
     {
         return $this->belongsToMany(SendingServer::class, 'campaign_server');
     }
+
+    public function unsubscribedLeads()
+    {
+        return $this->belongsToMany(Lead::class, 'exclusions', 'campaign_id', 'lead_number', 'id', 'phone');
+    }
+
 }

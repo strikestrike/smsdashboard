@@ -28,4 +28,9 @@ class SendingServer extends Model
     {
         return $this->belongsToMany(Campaign::class, 'campaign_server', 'sending_server_id', 'campaign_id');
     }
+
+    public function excludedLeads()
+    {
+        return $this->belongsToMany(Lead::class, 'exclusions', 'sending_server_id', 'lead_number', 'id', 'phone');
+    }
 }

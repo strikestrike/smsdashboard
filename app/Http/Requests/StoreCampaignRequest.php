@@ -29,7 +29,7 @@ class StoreCampaignRequest extends FormRequest
             'name' => [
                 'string',
                 'required',
-                'unique:campaign',
+                'unique:campaigns',
             ],
         ];
     }

@@ -1,17 +1,17 @@
 <x-admin>
     @section('title')
-        {{ __('cruds.lead.title_singular') }}
+        {{ __('cruds.campaign.title_singular') }}
     @endsection
 
 <div class="card">
     <div class="card-header">
-        <h4>{{ __('global.show') }} {{ __('cruds.lead.title_singular') }}</h4>
+        <h4>{{ __('global.show') }} {{ __('cruds.campaign.title_singular') }}</h4>
     </div>
 
     <div class="card-body">
         <div class="form-group">
             <div class="form-group">
-                <a class="btn btn-default" href="{{ route('admin.leads.index') }}">
+                <a class="btn btn-default" href="{{ route('admin.campaigns.index') }}">
                     {{ __('global.back_to_list') }}
                 </a>
             </div>
@@ -19,64 +19,64 @@
                 <tbody>
                     <tr>
                         <th>
-                            {{ __('cruds.lead.fields.id') }}
+                            {{ __('cruds.campaign.fields.id') }}
                         </th>
                         <td>
-                            {{ $lead->id }}
+                            {{ $campaign->id }}
                         </td>
                     </tr>
                     <tr>
                         <th>
-                            {{ __('cruds.lead.fields.name') }}
+                            {{ __('cruds.campaign.fields.name') }}
                         </th>
                         <td>
-                            {{ $lead->name }}
+                            {{ $campaign->name }}
                         </td>
                     </tr>
                     <tr>
                         <th>
-                            {{ __('cruds.lead.fields.email') }}
+                            {{ __('cruds.campaign.fields.template') }}
                         </th>
                         <td>
-                            {{ $lead->email }}
+                            {{ $campaign->template }}
                         </td>
                     </tr>
                     <tr>
                         <th>
-                            {{ __('cruds.lead.fields.phone') }}
+                            {{ __('cruds.campaign.fields.tags') }}
                         </th>
                         <td>
-                            {{ $lead->phone }}
+                            {{ $campaign->tags->pluck('name')->implode(', ') }}
                         </td>
                     </tr>
                     <tr>
                         <th>
-                            {{ __('cruds.lead.fields.origin') }}
+                            {{ __('cruds.campaign.fields.servers') }}
                         </th>
                         <td>
-                            {{ $lead->origin }}
+                            {{ $campaign->sendingServers->pluck('name')->implode(', ') }}
                         </td>
                     </tr>
                     <tr>
                         <th>
-                            {{ __('cruds.lead.fields.tags') }}
+                            {{ __('cruds.campaign.fields.countries') }}
                         </th>
                         <td>
-                            {{ $lead->tags->pluck('name')->implode(', ') }}
+                            {{ $campaign->countries->pluck('name')->implode(', ') }}
                         </td>
                     </tr>
                     <tr>
                         <th>
-                            {{ __('cruds.lead.fields.exclusions') }}
+                            {{ __('cruds.campaign.fields.exclusions') }}
                         </th>
                         <td>
-                            {{ $lead->excludedServers->pluck('name')->implode(', ') }}
+                            {{ $campaign->exclusions->pluck('name')->implode(', ') }}
                         </td>
                     </tr>
                 </tbody>
             </table>
             <div class="form-group">
-                <a class="btn btn-default" href="{{ route('admin.leads.index') }}">
+                <a class="btn btn-default" href="{{ route('admin.campaigns.index') }}">
                     {{ __('global.back_to_list') }}
                 </a>
             </div>

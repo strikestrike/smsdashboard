@@ -11,15 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('campaign_exclusion', function (Blueprint $table) {
+        Schema::create('campaign_country', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('campaign_id');
-            $table->unsignedBigInteger('sending_server_id');
+            $table->unsignedBigInteger('country_id');
             $table->timestamps();
 
             // Define foreign key constraints
             $table->foreign('campaign_id')->references('id')->on('campaigns')->onDelete('cascade');
-            $table->foreign('sending_server_id')->references('id')->on('sending_servers')->onDelete('cascade');
+            $table->foreign('country_id')->references('id')->on('countries')->onDelete('cascade');
         });
     }
 
@@ -28,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('campaign_exclusion');
+        Schema::dropIfExists('campaign_country');
     }
 };

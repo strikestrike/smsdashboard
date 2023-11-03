@@ -25,6 +25,7 @@
                             <th>{{ __('cruds.campaign.fields.id') }}</th>
                             <th>{{ __('cruds.campaign.fields.name') }}</th>
                             <th>{{ __('cruds.campaign.fields.servers') }}</th>
+                            <th>{{ __('cruds.campaign.fields.tags') }}</th>
                             <th>{{ __('cruds.campaign.fields.created_at') }}</th>
                             <th>{{ __('cruds.campaign.fields.scheduled_at') }}</th>
                             <th>{{ __('cruds.campaign.fields.completed_at') }}</th>
@@ -43,6 +44,7 @@
                             <th>{{ __('cruds.campaign.fields.id') }}</th>
                             <th>{{ __('cruds.campaign.fields.name') }}</th>
                             <th>{{ __('cruds.campaign.fields.servers') }}</th>
+                            <th>{{ __('cruds.campaign.fields.tags') }}</th>
                             <th>{{ __('cruds.campaign.fields.created_at') }}</th>
                             <th>{{ __('cruds.campaign.fields.scheduled_at') }}</th>
                             <th>{{ __('cruds.campaign.fields.completed_at') }}</th>
@@ -103,7 +105,7 @@
                             method: 'POST',
                             url: config.url,
                             data: { ids: ids, _method: 'DELETE' }})
-                            .done(function () { location.reload() })
+                            .done(function () { table.ajax.reload() })
                     }
                 }
             }
@@ -116,18 +118,25 @@
                 serverSide: true,
                 retrieve: true,
                 aaSorting: [],
-                ajax: "{{ route('admin.campaigns.index') }}",
+                ajax: {
+                    type: 'GET',
+                    headers: {'x-csrf-token': _token},
+                    url: "{{ route('admin.campaigns.index') }}",
+                    data: {
+                        type: 'ongoing',
+                    },
+                },
                 columns: [
                     { data: 'placeholder', name: 'placeholder' },
                     { data: 'id', name: 'id' },
                     { data: 'name', name: 'name' },
-                    { data: 'servers', name: 'servers', width: '30%' },
-                    { data: 'created_at', name: 'created_at', width: '10%' },
-                    { data: 'scheduled_at', name: 'scheduled_at', width: '10%' },
-                    { data: 'completed_at', name: 'completed_at', width: '10%' },
+                    { data: 'tag_names', name: 'tag_names'},
+                    { data: 'server_names', name: 'server_names'},
+                    { data: 'created_at', name: 'created_at'},
+                    { data: 'scheduled_at', name: 'scheduled_at'},
+                    { data: 'completed_at', name: 'completed_at'},
                     { data: 'actions', sortable: false, searchable: false }
                 ],
-                scrollX: '100%',
                 colVis: {
                     exclude: [ 0 ]
                 },
@@ -136,6 +145,7 @@
                 pageLength: 20,
             };
             let table_ongoing = $('.datatable-ongoing').DataTable(dtOverrideGlobals);
+            dtOverrideGlobals.ajax.data.type = 'history';
             let table_history = $('.datatable-history').DataTable(dtOverrideGlobals);
             $('a[data-toggle="tab"]').on('shown.bs.tab click', function(e){
                 $($.fn.dataTable.tables(true)).DataTable()

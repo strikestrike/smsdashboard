@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->string('name', 255);
             $table->enum('channel', ['sms', 'email'])->default('sms');
-            $table->text('target_countries')->nullable();
             $table->string('template', 153)->nullable();
             $table->dateTime('scheduled_at')->nullable();
             $table->dateTime('completed_at')->nullable();
