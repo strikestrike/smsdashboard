@@ -125,4 +125,11 @@
         </div>
     </div>
 
+    {{--@section('page_scripts')
+            <script>
+                $(function() {
+                    $('.select2').select2({tags: true});
+                });
+            </script>
+    @endsection--}}
 </x-admin>

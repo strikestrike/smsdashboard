@@ -29,16 +29,20 @@ class ImportController extends Controller
         {
             return redirect(route('admin.feeds.index'))->withErrors($validator);
         }
-        else
-        {
-            try {
-                Excel::import(new LeadsImport, request()->file('file'));
-                Session::flash('success', 'Leads uploaded successfully.');
-                return redirect(route('admin.feeds.index'));
-            } catch (\Exception $e) {
-                Session::flash('danger', $e->getMessage());
-                return redirect(route('admin.feeds.index'));
-            }
+
+        $import = new LeadsImport;
+
+        try {
+            Excel::import($import, request()->file('file'));
+
+            $successCount = $import->getSuccessCount();
+            $errorCount = $import->getErrorCount();
+
+            Session::flash('success', "$successCount leads uploaded successfully. $errorCount leads returned errors.");
+            return redirect(route('admin.feeds.index'));
+        } catch (\Exception $e) {
+            Session::flash('danger', $e->getMessage());
+            return redirect(route('admin.feeds.index'));
         }
     }
 }

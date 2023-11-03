@@ -50,8 +50,8 @@
             var fileUpload = document.getElementById("fileUpload");
 
             //Validate whether File is valid Excel file.
-            var regex = /^([a-zA-Z0-9\s_\\.\-:])+(.xls|.xlsx)$/;
-            if (regex.test(fileUpload.value.toLowerCase())) {
+            var regex = /\.(xls|xlsx|csv)$/i;
+            if (regex.test(fileUpload.value)) {
                 if (typeof (FileReader) != "undefined") {
                     var reader = new FileReader();
 

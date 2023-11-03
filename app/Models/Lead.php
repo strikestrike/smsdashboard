@@ -33,6 +33,11 @@ class Lead extends Model
         return $date->format('Y-m-d H:i:s');
     }
 
+    public function country()
+    {
+        return $this->belongsTo(Country::class, 'origin');
+    }
+
     public function tags()
     {
         return $this->belongsToMany(Tag::class, 'lead_tag');

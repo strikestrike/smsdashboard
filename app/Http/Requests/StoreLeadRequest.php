@@ -17,7 +17,7 @@ class StoreLeadRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => [
+            'email' => [
                 'string',
                 'required',
                 'unique:leads',

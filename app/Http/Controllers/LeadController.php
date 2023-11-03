@@ -7,6 +7,7 @@ use App\Http\Requests\MassTagLeadRequest;
 use App\Http\Requests\MassExcludeLeadRequest;
 use App\Http\Requests\StoreLeadRequest;
 use App\Http\Requests\UpdateLeadRequest;
+use App\Models\Country;
 use App\Models\Exclusion;
 use App\Models\Lead;
 use App\Models\SendingServer;
@@ -28,11 +29,16 @@ class LeadController extends Controller
             $table = Datatables::of($query);
 
             $table->addColumn('placeholder', '&nbsp;');
+            $table->addColumn('country', '&nbsp;');
             $table->addColumn('used_campaigns', '&nbsp;');
             $table->addColumn('tag_names', '&nbsp;');
             $table->addColumn('exclusion_names', '&nbsp;');
             $table->addColumn('actions', '&nbsp;');
 
+            $table->editColumn('country', function ($row) {
+                $country = $row->country?->name;
+                return $country;
+            });
             $table->editColumn('used_campaigns', function ($row) {
                 $campaigns = $row->campaigns()->pluck('name')->implode(', ');
                 return $campaigns;
@@ -80,8 +86,9 @@ class LeadController extends Controller
 
         $tags = Tag::all();
         $servers = SendingServer::all();
+        $countries = Country::all();
 
-        return view('admin.leads.create', compact('tags', 'servers'));
+        return view('admin.leads.create', compact('tags', 'servers', 'countries'));
     }
 
     public function store(StoreLeadRequest $request)
@@ -89,7 +96,15 @@ class LeadController extends Controller
         $lead = Lead::create($request->all());
 
         // Sync lead tags
-        $tagIds = $request->input('tags');
+        $tagTexts = $request->input('tags');
+        $tagIds = [];
+
+        if (!empty($tagTexts)) {
+            foreach ($tagTexts as $tagText) {
+                $tag = Tag::firstOrCreate(['name' => $tagText]);
+                $tagIds[] = $tag->id;
+            }
+        }
 
         if (!empty($tagIds)) {
             $lead->tags()->attach($tagIds);
@@ -117,8 +132,9 @@ class LeadController extends Controller
 
         $tags = Tag::all();
         $servers = SendingServer::all();
+        $countries = Country::all();
 
-        return view('admin.leads.edit', compact('lead', 'tags', 'servers'));
+        return view('admin.leads.edit', compact('lead', 'tags', 'servers', 'countries'));
     }
 
     public function update(UpdateLeadRequest $request, Lead $lead)
@@ -126,7 +142,15 @@ class LeadController extends Controller
         $lead->update($request->all());
 
         // Sync lead tags
-        $tagIds = $request->input('tags');
+        $tagTexts = $request->input('tags');
+        $tagIds = [];
+
+        if (!empty($tagTexts)) {
+            foreach ($tagTexts as $tagText) {
+                $tag = Tag::firstOrCreate(['name' => $tagText]);
+                $tagIds[] = $tag->id;
+            }
+        }
 
         $lead->tags()->detach();
         if (!empty($tagIds)) {

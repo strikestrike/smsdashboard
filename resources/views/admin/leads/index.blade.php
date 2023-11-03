@@ -235,7 +235,7 @@
                     { data: 'name', name: 'name' },
                     { data: 'email', name: 'email' },
                     { data: 'phone', name: 'phone' },
-                    { data: 'origin', name: 'origin' },
+                    { data: 'country', name: 'country' },
                     { data: 'tag_names', name: 'tag_names' },
                     { data: 'exclusion_names', name: 'exclusion_names' },
                     { data: 'used_campaigns', name: 'used_campaigns' },

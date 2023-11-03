@@ -38,7 +38,11 @@
                 </div>
                 <div class="form-group">
                     <label for="origin">{{ trans('cruds.lead.fields.origin') }}</label>
-                    <input class="form-control {{ $errors->has('origin') ? 'is-invalid' : '' }}" type="text" name="origin" id="origin" value="{{ old('origin', $lead->origin) }}">
+                    <select class="select2 form-control {{ $errors->has('origin') ? 'is-invalid' : '' }}" name="origin" id="v" data-placeholder="Select Country" style="width: 100%;">
+                        @foreach($countries as $country)
+                            <option value="{{ $country->id }}" {{ $country->id == old('origin', $lead->origin) ? 'selected' : '' }}>{{ $country->name }}</option>
+                        @endforeach
+                    </select>
                     @if($errors->has('origin'))
                         <span class="text-danger">{{ $errors->first('origin') }}</span>
                     @endif
@@ -48,9 +52,7 @@
                     <label for="tags">{{ trans('cruds.tag.title') }}</label>
                     <select class="select2 form-control {{ $errors->has('tags') ? 'is-invalid' : '' }}" multiple="multiple" name="tags[]" data-placeholder="Select Tags" style="width: 100%;">
                         @foreach($tags as $tag)
-                            <option value="{{ $tag->id }}" {{ $lead->tags->contains('id', $tag->id) ? 'selected' : '' }}>
-                                {{ $tag->name }}
-                            </option>
+                            <option value="{{ $tag->name }}" {{ $lead->tags->contains('name', $tag->name) ? 'selected' : '' }}>{{ $tag->name }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -59,9 +61,7 @@
                     <select class="select2 form-control {{ $errors->has('servers') ? 'is-invalid' : '' }}" multiple="multiple" name="servers[]" data-placeholder="Select Servers" style="width: 100%;">
                         <?php $excludedServers = $lead->excludedServers()->get(); ?>
                         @foreach($servers as $server)
-                            <option value="{{ $server->id }}" {{ $excludedServers->contains('id', $server->id) ? 'selected' : '' }}>
-                                {{ $server->name }}
-                            </option>
+                            <option value="{{ $server->id }}" {{ $excludedServers->contains('id', $server->id) ? 'selected' : '' }}>{{ $server->name }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -74,4 +74,11 @@
         </div>
     </div>
 
+    @section('page_scripts')
+        <script>
+            $(function() {
+                $('.select2[name="tags[]"]').select2({tags: true});
+            });
+        </script>
+    @endsection
 </x-admin>

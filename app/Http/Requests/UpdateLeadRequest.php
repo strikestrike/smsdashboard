@@ -17,10 +17,10 @@ class UpdateLeadRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => [
+            'email' => [
                 'string',
                 'required',
-                'unique:leads,name,' . request()->route('lead')->id,
+                'unique:leads,email,' . request()->route('lead')->id,
             ],
         ];
     }

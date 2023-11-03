@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3121db32e1037c6505d5052130806228",
+    "content-hash": "0d43f7d02c3bd0747bf73d4167a5865d",
     "packages": [
         {
             "name": "brick/math",
@@ -6291,6 +6291,85 @@
     ],
     "packages-dev": [
         {
+            "name": "dipeshsukhia/laravel-country-state-city-data",
+            "version": "v2.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/dipeshsukhia/laravel-country-state-city-data.git",
+                "reference": "076e15c754103c413c8983c2e1b146d99f7de0f1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/dipeshsukhia/laravel-country-state-city-data/zipball/076e15c754103c413c8983c2e1b146d99f7de0f1",
+                "reference": "076e15c754103c413c8983c2e1b146d99f7de0f1",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/support": "^5.8|^6.0|^7.0|^8.0|^9.0|^10.0",
+                "php": ">=7.1.3"
+            },
+            "require-dev": {
+                "orchestra/testbench": "^8.0",
+                "phpunit/phpunit": "^9.0|^10.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "DipeshSukhia\\LaravelCountryStateCityData\\LaravelCountryStateCityDataServiceProvider"
+                    ],
+                    "aliases": {
+                        "LaravelCountryStateCityData": "DipeshSukhia\\LaravelCountryStateCityData\\LaravelCountryStateCityDataFacade"
+                    }
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "DipeshSukhia\\LaravelCountryStateCityData\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Dipesh Sukhia",
+                    "email": "dipesh.sukhia@gmail.com",
+                    "role": "Developer"
+                },
+                {
+                    "name": "Bhavin Gajjar",
+                    "email": "gajjarbhavin22@gmail.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Country State City Data Provider",
+            "homepage": "https://github.com/dipeshsukhia/laravel-country-state-city-data",
+            "keywords": [
+                "cities",
+                "city",
+                "countries",
+                "country",
+                "dipeshsukhia",
+                "laravel",
+                "laravel-country-state-city-data",
+                "state",
+                "states"
+            ],
+            "support": {
+                "issues": "https://github.com/dipeshsukhia/laravel-country-state-city-data/issues",
+                "source": "https://github.com/dipeshsukhia/laravel-country-state-city-data/tree/v2.0.2"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/dipeshsukhia",
+                    "type": "github"
+                }
+            ],
+            "time": "2023-07-06T10:45:22+00:00"
+        },
+        {
             "name": "fakerphp/faker",
             "version": "v1.23.0",
             "source": {
@@ -8738,5 +8817,5 @@
         "php": "^8.1"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.3.0"
 }
