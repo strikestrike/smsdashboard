@@ -68,6 +68,28 @@
         </div>
     </div>
 
+    <div class="modal fade" id="modal-import">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Import Leads</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group row">
+                        <input type="file" name="file" id="fileUpload"  class="mb-4 border-0" >
+                    </div>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-success" id="btn_import">Upload</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     @section('page_scripts')
     <script type="text/javascript">
         $(function () {
@@ -151,6 +173,46 @@
             }
             dtButtons.push(tagsButton);
 {{--                @endcan--}}
+            let importButtonTrans = '{{ trans('global.import') }}';
+            let importButton = {
+                text: importButtonTrans,
+                url: "{{ route('admin.feeds.upload') }}",
+                className: 'btn-success',
+                action: function (e, dt, node, config) {
+                    $("#modal-import").modal("show");
+                }
+            }
+            dtButtons.push(importButton);
+
+            $("#btn_import").on("click", function () {
+                // Create a FormData object to store the file
+                var formData = new FormData();
+                var fileInput = document.getElementById("fileUpload");
+                formData.append("file", fileInput.files[0]);
+
+                // Make an AJAX request to upload the file
+                $.ajax({
+                    headers: {'x-csrf-token': _token},
+                    url: "{{ route('admin.feeds.upload') }}",
+                    type: "POST",
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function (response) {
+                        if (response.success) {
+                            table.ajax.reload();
+                        } else {
+                            alert(response.message);
+                        }
+                        $('#fileUpload').val('');
+                        $("#modal-import").modal("hide");
+                    },
+                    error: function (error) {
+                        // Handle errors, e.g., show an error message
+                        alert("Error uploading the file: " + error.responseText);
+                    },
+                });
+            });
 
             let dtOverrideGlobals = {
                 buttons: dtButtons,

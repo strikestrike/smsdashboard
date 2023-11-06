@@ -71,4 +71,5 @@ return [
     'updated_at'                     => 'Updated at',
     'user_actions'                   => 'User actions',
     'remove'                         => 'Remove',
+    'import'                         => 'Import',
 ];

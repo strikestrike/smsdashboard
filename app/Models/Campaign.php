@@ -55,6 +55,19 @@ class Campaign extends Model
         return $this->belongsToMany(SendingServer::class, 'campaign_server');
     }
 
+    public function scopeOngoingCampaigns($query)
+    {
+        return $query->whereNull('completed_at');
+    }
+
+    public function scopeUnsubscribedCampaigns($query)
+    {
+        return $this->hasMany(Exclusion::class, 'campaign_id')
+                    ->selectRaw('COUNT(*) as campaign_count')
+                    ->groupBy('campaign_id')
+                    ->havingRaw('COUNT(*) > 1');
+    }
+
     public function unsubscribedLeads()
     {
         return $this->belongsToMany(Lead::class, 'exclusions', 'campaign_id', 'lead_number', 'id', 'phone');

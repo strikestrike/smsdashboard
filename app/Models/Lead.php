@@ -43,6 +43,11 @@ class Lead extends Model
         return $this->belongsToMany(Tag::class, 'lead_tag');
     }
 
+    public function smslogs()
+    {
+        return $this->belongsToMany(Tag::class, 'lead_tag');
+    }
+
     public function excludedServers()
     {
         return $this->belongsToMany(SendingServer::class, 'exclusions', 'lead_number', 'sending_server_id', 'phone', 'id');
@@ -66,8 +71,17 @@ class Lead extends Model
         })->has('sendingServers', '>=', 1);
     }
 
-    public function ongoingCampaigns()
+    public function campaignsWithSMSHistory()
     {
-        return $this->campaigns()->whereNull('completed_at');
+        return $this->belongsToMany(Campaign::class, 'sms_logs', 'lead_id', 'campaign_id')
+            ->withPivot('status')
+            ->withTimestamps();
+    }
+
+    public function scopeLeadsWithSuccessfulSMSHistory($query)
+    {
+        return $query->whereHas('campaignsWithSMSHistory', function ($subquery) {
+            $subquery->where('status', 'sent');
+        });
     }
 }

@@ -38,11 +38,19 @@ class ImportController extends Controller
             $successCount = $import->getSuccessCount();
             $errorCount = $import->getErrorCount();
 
-            Session::flash('success', "$successCount leads uploaded successfully. $errorCount leads returned errors.");
-            return redirect(route('admin.feeds.index'));
+            if ($request->ajax()) {
+                return response()->json(['success' => TRUE, 'message' => "$successCount leads uploaded successfully. $errorCount leads returned errors."]);
+            } else {
+                Session::flash('success', "$successCount leads uploaded successfully. $errorCount leads returned errors.");
+                return redirect(route('admin.feeds.index'));
+            }
         } catch (\Exception $e) {
-            Session::flash('danger', $e->getMessage());
-            return redirect(route('admin.feeds.index'));
+            if ($request->ajax()) {
+                return response()->json(['success' => FALSE, 'message' => $e->getMessage()]);
+            } else {
+                Session::flash('danger', $e->getMessage());
+                return redirect(route('admin.feeds.index'));
+            }
         }
     }
 }
