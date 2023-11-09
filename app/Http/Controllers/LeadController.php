@@ -93,6 +93,9 @@ class LeadController extends Controller
 
     public function store(StoreLeadRequest $request)
     {
+        $phone = $request->input('phone');
+        $phone = preg_replace('/\D/', '', $phone);
+        $request['phone'] = $phone;
         $lead = Lead::create($request->all());
 
         // Sync lead tags
@@ -126,6 +129,9 @@ class LeadController extends Controller
 
     public function update(UpdateLeadRequest $request, Lead $lead)
     {
+        $phone = $request->input('phone');
+        $phone = preg_replace('/\D/', '', $phone);
+        $request['phone'] = $phone;
         $lead->update($request->all());
 
         // Sync lead tags
