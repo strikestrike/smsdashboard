@@ -25,8 +25,10 @@
                     </th>
                     <th>{{ __('cruds.sendingServer.fields.id') }}</th>
                     <th>{{ __('cruds.sendingServer.fields.name') }}</th>
-                    <th>{{ __('cruds.sendingServer.fields.sender_number') }}</th>
-                    <th>{{ __('cruds.sendingServer.fields.sender_api') }}</th>
+                    <th>{{ __('cruds.sendingServer.fields.product_token') }}</th>
+                    <th>{{ __('cruds.sendingServer.fields.api_key') }}</th>
+                    <th>{{ __('cruds.sendingServer.fields.api_endpoint') }}</th>
+                    <th>{{ __('cruds.sendingServer.fields.phone_number') }}</th>
                     <th>{{ __('cruds.sendingServer.fields.created_at') }}</th>
                     <th>{{ __('global.actions') }}</th>
                 </tr>
@@ -89,8 +91,10 @@
                         { data: 'placeholder', name: 'placeholder' },
                         { data: 'id', name: 'id' },
                         { data: 'name', name: 'name' },
-                        { data: 'sender_number', name: 'sender_number' },
-                        { data: 'sender_api', name: 'sender_api' },
+                        { data: 'product_token', name: 'product_token' },
+                        { data: 'api_key', name: 'api_key' },
+                        { data: 'api_endpoint', name: 'api_endpoint' },
+                        { data: 'phone_number', name: 'phone_number' },
                         { data: 'created_at', name: 'created_at' },
                         { data: 'actions', sortable: false, searchable: false }
                     ],

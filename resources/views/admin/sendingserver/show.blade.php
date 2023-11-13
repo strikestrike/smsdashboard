@@ -35,18 +35,34 @@
                     </tr>
                     <tr>
                         <th>
-                            {{ __('cruds.sendingServer.fields.sender_number') }}
+                            {{ __('cruds.sendingServer.fields.product_token') }}
                         </th>
                         <td>
-                            {{ $sendingserver->sender_number }}
+                            {{ $sendingserver->product_token }}
                         </td>
                     </tr>
                     <tr>
                         <th>
-                            {{ __('cruds.sendingServer.fields.sender_api') }}
+                            {{ __('cruds.sendingServer.fields.api_key') }}
                         </th>
                         <td>
-                            {{ $sendingserver->sender_api }}
+                            {{ $sendingserver->api_key }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            {{ __('cruds.sendingServer.fields.api_endpoint') }}
+                        </th>
+                        <td>
+                            {{ $sendingserver->api_endpoint }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            {{ __('cruds.sendingServer.fields.phone_number') }}
+                        </th>
+                        <td>
+                            {{ $sendingserver->phone_number }}
                         </td>
                     </tr>
                 </tbody>

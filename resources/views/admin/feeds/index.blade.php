@@ -33,7 +33,7 @@
                     </p>
                     <form action="{{ route('admin.feeds.upload') }}" method="POST" enctype="multipart/form-data">
                         @csrf
-                        <input type="file" name="file" id="fileUpload"  class="mb-4 border-0" onchange="UploadProcess()">
+                        <input type="file" name="file" id="fileUpload"  class="mb-4 border-0" {{--onchange="UploadProcess()"--}}>
                         <br>
                         <button class="btn btn-success mb-4">Upload</button>
                     </form>

@@ -8,6 +8,10 @@ use App\Models\Tag;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithChunkReading;
+use Propaganistas\LaravelPhone\Casts\RawPhoneNumberCast;
+use Propaganistas\LaravelPhone\Casts\E164PhoneNumberCast;
+use Propaganistas\LaravelPhone\PhoneNumber;
+use App\Helpers\Helper;
 
 class LeadsImport implements ToModel, WithHeadingRow, WithChunkReading
 {
@@ -21,43 +25,105 @@ class LeadsImport implements ToModel, WithHeadingRow, WithChunkReading
     */
     public function model(array $row)
     {
-        $email = $row['email'];
+        // Remove the "n-"
+        $emailsString = str_replace("n-", "", $row['email']);
+        // Remove the "ph:" prefix
+        $phoneNumbersString = str_replace("ph:", "", $row['phone']);
 
-        // Check if a lead with the same email already exists
-        if (Lead::where('email', $email)->exists()) {
-            $this->errorCount++;
-            return null; // Skip the record
-        }
+        $emails = explode(';', $emailsString);
+        $phones = explode(';', $phoneNumbersString);
 
-        $phone = $this->formatPhoneNumber($row['phone']); // Format the phone number
+        // Align phones and emails by numeric order
+        $alignedData = $this->alignData($phones, $emails);
 
-        // Create or retrieve tags
-        $tagNames = explode(',', $row['tag']);
-        $tagIds = [];
-        foreach ($tagNames as $tagName) {
-            if (!empty($tagName)) {
-                $tag = Tag::firstOrCreate(['name' => $tagName]);
-                $tagIds[] = $tag->id;
+        foreach ($alignedData as $data) {
+            $email = $data['email'];
+
+            // Check if a lead with the same email already exists
+            if (empty($email) || Lead::where('email', $email)->exists()) {
+                $this->errorCount++;
+                continue; // Skip the record
             }
+
+            $phone = $this->formatPhoneNumber($data['phone']); // Format the phone number
+
+            // Create or retrieve tags
+            $tagNames = explode(',', $row['tag']);
+            $tagIds = [];
+            foreach ($tagNames as $tagName) {
+                if (!empty($tagName)) {
+                    $tag = Tag::firstOrCreate(['name' => $tagName]);
+                    $tagIds[] = $tag->id;
+                }
+            }
+
+            // Determine country name based on 'origin' field or phone number
+            $countryName = !empty($row['origin'])
+                ? $this->getCountryNameByCode($row['origin'])
+                : $this->getCountryNameByPhoneNumber($phone);
+
+            if (empty($countryName)) {
+                $this->errorCount++;
+                continue; // Skip the record
+            }
+
+            // Find the country by name or create a new one if it doesn't exist
+            $country = Country::firstOrCreate(['name' => strtolower($countryName)]);
+
+            $lead = new Lead([
+                'name'     => $row['name'],
+                'email'    => $email,
+                'phone'    => $phone,
+                'origin'   => $country->id,
+            ]);
+
+            $lead->save(); // Save the lead to the database
+
+            $lead->tags()->sync($tagIds); // Sync the tags if there are tags to sync
+
+            $this->successCount++;
         }
 
-        // Find the country by name or create a new one if it doesn't exist
-        $country = Country::firstOrCreate(['name' => strtolower($row['origin'])]);
+        return null; // Skip the record in the original model
+    }
 
-        $lead = new Lead([
-            'name'     => $row['name'],
-            'email'    => $row['email'],
-            'phone'    => $phone,
-            'origin'   => $country->id,
-        ]);
+    /**
+     * Align phones and emails by numeric order
+     *
+     * @param array $phones
+     * @param array $emails
+     * @return array
+     */
+    private function alignData(array $phones, array $emails)
+    {
+        $maxCount = max(count($phones), count($emails));
 
-        $lead->save(); // Save the lead to the database
+        $alignedData = [];
+        for ($i = 0; $i < $maxCount; $i++) {
+            $phone = isset($phones[$i]) ? $phones[$i] : null;
+            $email = isset($emails[$i]) ? $emails[$i] : null;
+            $alignedData[] = ['phone' => $phone, 'email' => $email];
+        }
 
-        $lead->tags()->sync($tagIds); // Sync the tags if there are tags to sync
+        return $alignedData;
+    }
 
-        $this->successCount++;
+    private function getCountryNameByCode($code)
+    {
+        if (empty($code)) {
+            return null;
+        }
+        return Helper::countryCodeToName($code);
+    }
 
-        return $lead;
+    private function getCountryNameByPhoneNumber($phoneNumber)
+    {
+        if (empty($phoneNumber)) {
+            return null;
+        }
+        $phone = new PhoneNumber($phoneNumber);
+        $countryCode = $phone->getCountry();
+        return $this->getCountryNameByCode($countryCode);
     }
 
     function formatPhoneNumber($phoneNumber)

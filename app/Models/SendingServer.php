@@ -15,8 +15,10 @@ class SendingServer extends Model
 
     protected $fillable = [
         'name',
-        'sender_number',
-        'sender_api'
+        'product_token',
+        'api_key',
+        'api_endpoint',
+        'phone_number'
     ];
 
     public function exclusions()

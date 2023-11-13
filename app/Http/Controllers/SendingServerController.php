@@ -60,6 +60,9 @@ class SendingServerController extends Controller
 
     public function store(StoreSendingServerRequest $request)
     {
+        $phone = $request->input('phone_number');
+        $phone = preg_replace('/\D/', '', $phone);
+        $request['phone_number'] = $phone;
         $sendingserver = SendingServer::create($request->all());
 
         return redirect()->route('admin.sendingservers.index');
@@ -74,6 +77,9 @@ class SendingServerController extends Controller
 
     public function update(UpdateSendingServerRequest $request, SendingServer $sendingserver)
     {
+        $phone = $request->input('phone_number');
+        $phone = preg_replace('/\D/', '', $phone);
+        $request['phone_number'] = $phone;
         $sendingserver->update($request->all());
 
         return redirect()->route('admin.sendingservers.index');

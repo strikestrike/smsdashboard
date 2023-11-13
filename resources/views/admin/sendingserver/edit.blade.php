@@ -21,20 +21,36 @@
                     <span class="help-block">{{ trans('cruds.sendingServer.fields.name_helper') }}</span>
                 </div>
                 <div class="form-group">
-                    <label for="sender_number">{{ trans('cruds.sendingServer.fields.sender_number') }}</label>
-                    <input class="form-control {{ $errors->has('sender_number') ? 'is-invalid' : '' }}" type="text" name="sender_number" id="sender_number" value="{{ old('email', $sendingserver->sender_number) }}">
-                    @if($errors->has('sender_number'))
+                    <label for="product_token">{{ trans('cruds.sendingServer.fields.product_token') }}</label>
+                    <input class="form-control {{ $errors->has('product_token') ? 'is-invalid' : '' }}" type="text" name="product_token" id="product_token" value="{{ old('product_token', $sendingserver->product_token) }}">
+                    @if($errors->has('product_token'))
                         <span class="text-danger">{{ $errors->first('sender_number') }}</span>
                     @endif
-                    <span class="help-block">{{ trans('cruds.sendingServer.fields.sender_number_helper') }}</span>
+                    <span class="help-block">{{ trans('cruds.sendingServer.fields.product_token_helper') }}</span>
                 </div>
                 <div class="form-group">
-                    <label for="sender_api">{{ trans('cruds.sendingServer.fields.sender_api') }}</label>
-                    <input class="form-control {{ $errors->has('sender_api') ? 'is-invalid' : '' }}" type="text" name="sender_api" id="sender_api" value="{{ old('phone', $sendingserver->sender_api) }}">
-                    @if($errors->has('sender_api'))
-                        <span class="text-danger">{{ $errors->first('sender_api') }}</span>
+                    <label for="api_key">{{ trans('cruds.sendingServer.fields.api_key') }}</label>
+                    <input class="form-control {{ $errors->has('api_key') ? 'is-invalid' : '' }}" type="text" name="api_key" id="api_key" value="{{ old('api_key', $sendingserver->api_key) }}">
+                    @if($errors->has('api_key'))
+                        <span class="text-danger">{{ $errors->first('api_key') }}</span>
                     @endif
-                    <span class="help-block">{{ trans('cruds.sendingServer.fields.sender_api_helper') }}</span>
+                    <span class="help-block">{{ trans('cruds.sendingServer.fields.api_key_helper') }}</span>
+                </div>
+                <div class="form-group">
+                    <label for="api_endpoint">{{ trans('cruds.sendingServer.fields.api_endpoint') }}</label>
+                    <input class="form-control {{ $errors->has('api_endpoint') ? 'is-invalid' : '' }}" type="text" name="api_endpoint" id="api_endpoint" value="{{ old('api_endpoint', $sendingserver->api_endpoint) }}">
+                    @if($errors->has('api_endpoint'))
+                        <span class="text-danger">{{ $errors->first('api_endpoint') }}</span>
+                    @endif
+                    <span class="help-block">{{ trans('cruds.sendingServer.fields.api_endpoint_helper') }}</span>
+                </div>
+                <div class="form-group">
+                    <label for="phone_number">{{ trans('cruds.sendingServer.fields.phone_number') }}</label>
+                    <input class="form-control {{ $errors->has('phone_number') ? 'is-invalid' : '' }}" type="text" name="phone_number" id="phone_number" value="{{ old('phone_number', $sendingserver->phone_number) }}">
+                    @if($errors->has('phone_number'))
+                        <span class="text-danger">{{ $errors->first('phone_number') }}</span>
+                    @endif
+                    <span class="help-block">{{ trans('cruds.sendingServer.fields.phone_number_helper') }}</span>
                 </div>
                 <div class="form-group">
                     <button class="btn btn-danger" type="submit">

@@ -19,6 +19,8 @@ class ImportController extends Controller
 
     public function postUploadExcel(Request $request)
     {
+        set_time_limit(0);
+
         $rules = array(
             'file' => 'required',
         );

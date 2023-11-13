@@ -14,8 +14,10 @@ return new class extends Migration
         Schema::create('sending_servers', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('sender_number');
-            $table->string('sender_api');
+            $table->string('product_token');
+            $table->string('api_key');
+            $table->string('api_endpoint');
+            $table->string('phone_number');
             $table->timestamps();
             $table->softDeletes();
         });
