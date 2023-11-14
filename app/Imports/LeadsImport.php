@@ -8,15 +8,24 @@ use App\Models\Tag;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithChunkReading;
+use Maatwebsite\Excel\Concerns\WithStartRow;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Propaganistas\LaravelPhone\Casts\RawPhoneNumberCast;
 use Propaganistas\LaravelPhone\Casts\E164PhoneNumberCast;
 use Propaganistas\LaravelPhone\PhoneNumber;
 use App\Helpers\Helper;
 
-class LeadsImport implements ToModel, WithHeadingRow, WithChunkReading
+class LeadsImport implements ToModel, WithHeadingRow, WithChunkReading, WithStartRow, ShouldQueue
 {
+    protected $data;
+
     protected $successCount = 0;
     protected $errorCount = 0;
+
+    public function setData(array $data)
+    {
+        $this->data = $data;
+    }
 
     /**
     * @param array $row
@@ -137,6 +146,11 @@ class LeadsImport implements ToModel, WithHeadingRow, WithChunkReading
     public function chunkSize(): int
     {
         return 1000;
+    }
+
+    public function startRow(): int
+    {
+        return 2;
     }
 
     public function getSuccessCount()

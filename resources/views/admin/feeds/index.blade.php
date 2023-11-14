@@ -31,12 +31,12 @@
                     <p class="text-primary">
                         <a href="{{ asset('Leads.xlsx') }}">Download Excel Template <i class="fas fa-download"></i></a>
                     </p>
-                    <form action="{{ route('admin.feeds.upload') }}" method="POST" enctype="multipart/form-data">
-                        @csrf
-                        <input type="file" name="file" id="fileUpload"  class="mb-4 border-0" {{--onchange="UploadProcess()"--}}>
-                        <br>
-                        <button class="btn btn-success mb-4">Upload</button>
-                    </form>
+                    <div id="upload-container" class="text-center">
+                        <button id="browseFile" class="btn btn-primary">Brows File</button>
+                    </div>
+                    <div  style="display: none" class="progress mt-3" style="height: 25px">
+                        <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 75%; height: 100%">75%</div>
+                    </div>
                     <div id="ExcelTable"></div>
                 </div>
 
@@ -45,11 +45,64 @@
     </div>
 
     @section('page_scripts')
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.13.5/xlsx.full.min.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.13.5/jszip.js"></script>
+{{--    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.13.5/xlsx.full.min.js"></script>--}}
+{{--    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.13.5/jszip.js"></script>--}}
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/resumablejs@1.1.0/resumable.min.js"></script>
     <script type="text/javascript">
 
-        function UploadProcess() {
+        let browseFile = $('#browseFile');
+        let resumable = new Resumable({
+            target: '{{ route('admin.feeds.upload') }}',
+            query:{_token:'{{ csrf_token() }}'} ,// CSRF token
+            fileType: ['xls', 'xlsx', 'csv'],
+            chunkSize: 50*1024*1024, // default is 1*1024*1024, this should be less than your maximum limit in php.ini
+            headers: {
+                'Accept' : 'application/json'
+            },
+            testChunks: false,
+            throttleProgressCallbacks: 1,
+        });
+
+        resumable.assignBrowse(browseFile[0]);
+
+        resumable.on('fileAdded', function (file) { // trigger when file picked
+            showProgress();
+            resumable.upload() // to actually start uploading.
+        });
+
+        resumable.on('fileProgress', function (file) { // trigger when file progress update
+            updateProgress(Math.floor(file.progress() * 100));
+        });
+
+        resumable.on('fileSuccess', function (file, response) { // trigger when file upload complete
+            response = JSON.parse(response)
+            console.log(response.path);
+            alert("Operations successfully queued and will be imported soon.");
+        });
+
+        resumable.on('fileError', function (file, response) { // trigger when there is any error
+            alert('file uploading error.')
+        });
+
+
+        let progress = $('.progress');
+        function showProgress() {
+            progress.find('.progress-bar').css('width', '0%');
+            progress.find('.progress-bar').html('0%');
+            progress.find('.progress-bar').removeClass('bg-success');
+            progress.show();
+        }
+
+        function updateProgress(value) {
+            progress.find('.progress-bar').css('width', `${value}%`)
+            progress.find('.progress-bar').html(`${value}%`)
+        }
+
+        function hideProgress() {
+            progress.hide();
+        }
+
+       /* function UploadProcess() {
             //Reference the FileUpload element.
             var fileUpload = document.getElementById("fileUpload");
 
@@ -166,7 +219,7 @@
             var ExcelTable = document.getElementById("ExcelTable");
             ExcelTable.innerHTML = "";
             ExcelTable.appendChild(myTable);
-        };
+        };*/
     </script>
     @endsection
 </x-admin>
