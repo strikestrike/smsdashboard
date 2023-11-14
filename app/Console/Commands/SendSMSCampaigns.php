@@ -34,13 +34,11 @@ class SendSMSCampaigns extends Command
     {
         // Get campaigns scheduled for the current time
         Log::error('starting');
-        $campaigns = Campaign::where('scheduled_at', '>=', now())->ongoingCampaigns()->get();
+        $campaigns = Campaign::where('scheduled_at', '<=', now())->ongoingCampaigns()->get();
         Log::error('count' . count($campaigns));
         foreach ($campaigns as $campaign) {
             $this->sendSMSCampaign($campaign);
         }
-
-        $this->info('SMS campaigns sent successfully.');
     }
 
     private function sendSMSCampaign(Campaign $campaign)
@@ -69,6 +67,8 @@ class SendSMSCampaigns extends Command
             $result = $client->SendMessage($messageText, $sendingServer->phone_number, $recipientPhoneNumbers, $reference);
             Log::info('sending sms: ' . $sendingServer->phone_number . ' ' . implode(',', $recipientPhoneNumbers) . ', api_key:' . $sendingServer->api_key . ' result:' . $result->statusCode);
             if ($result->statusCode == TextClientStatusCodes::OK) {
+                $this->info('SMS campaigns sent successfully.');
+
                 // SMS sent successfully, collect data for batch insertion
                 $smsLogsData = [];
 

@@ -24,8 +24,8 @@
                             <th width="10"></th>
                             <th>{{ __('cruds.campaign.fields.id') }}</th>
                             <th>{{ __('cruds.campaign.fields.name') }}</th>
-                            <th>{{ __('cruds.campaign.fields.servers') }}</th>
                             <th>{{ __('cruds.campaign.fields.tags') }}</th>
+                            <th>{{ __('cruds.campaign.fields.servers') }}</th>
                             <th>{{ __('cruds.campaign.fields.created_at') }}</th>
                             <th>{{ __('cruds.campaign.fields.scheduled_at') }}</th>
                             <th>{{ __('cruds.campaign.fields.completed_at') }}</th>
@@ -43,8 +43,8 @@
                             <th width="10"></th>
                             <th>{{ __('cruds.campaign.fields.id') }}</th>
                             <th>{{ __('cruds.campaign.fields.name') }}</th>
-                            <th>{{ __('cruds.campaign.fields.servers') }}</th>
                             <th>{{ __('cruds.campaign.fields.tags') }}</th>
+                            <th>{{ __('cruds.campaign.fields.servers') }}</th>
                             <th>{{ __('cruds.campaign.fields.created_at') }}</th>
                             <th>{{ __('cruds.campaign.fields.scheduled_at') }}</th>
                             <th>{{ __('cruds.campaign.fields.completed_at') }}</th>

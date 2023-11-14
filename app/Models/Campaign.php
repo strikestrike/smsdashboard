@@ -30,6 +30,26 @@ class Campaign extends Model
         'completed_at',
     ];
 
+    // Event to set default value for scheduled_at when creating a new record
+    public static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            if (!$model->scheduled_at) {
+                $model->scheduled_at = now(); // Set it to the current time
+            }
+        });
+    }
+
+    // Event to set default value for scheduled_at when updating a record
+    public static function updating($model)
+    {
+        if (!$model->scheduled_at) {
+            $model->scheduled_at = now(); // Set it to the current time
+        }
+    }
+
     protected function serializeDate(DateTimeInterface $date)
     {
         return $date->format('Y-m-d H:i:s');
@@ -75,15 +95,23 @@ class Campaign extends Model
 
     public function associatedLeads()
     {
-        // Step 1: Get all tags of the campaign
         $campaignTags = $this->tags;
+        $campaignCountries = $this->countries;
 
-        // Step 2: Get all leads associated with these tags
-        $leads = Lead::whereHas('tags', function ($query) use ($campaignTags) {
-            $query->whereIn('tag_id', $campaignTags->pluck('id'));
-        })->get();
+        $qb = Lead::query();
+        if (count($campaignTags) > 0) {
+            $qb = $qb->whereHas('tags', function ($query) use ($campaignTags) {
+                $query->whereIn('tag_id', $campaignTags->pluck('id'));
+            });
+        }
+        if (count($campaignCountries) > 0) {
+            $qb = $qb->whereHas('country', function ($query) use ($campaignCountries) {
+                $query->whereIn('origin', $campaignCountries->pluck('name'));
+            });
+        }
+        $leads = $qb->get();
 
-        // Step 3: Filter leads whose campaigns contain the current campaign
+        // Filter leads whose campaigns contain the current campaign
         $filteredLeads = $leads->filter(function ($lead) {
             // Check campaign conditions manually
             $leadCampaigns = $lead->campaigns()->get();
