@@ -73,4 +73,30 @@ class Campaign extends Model
         return $this->belongsToMany(Lead::class, 'exclusions', 'campaign_id', 'lead_number', 'id', 'phone');
     }
 
+    public function associatedLeads()
+    {
+        // Step 1: Get all tags of the campaign
+        $campaignTags = $this->tags;
+
+        // Step 2: Get all leads associated with these tags
+        $leads = Lead::whereHas('tags', function ($query) use ($campaignTags) {
+            $query->whereIn('tag_id', $campaignTags->pluck('id'));
+        })->get();
+
+        // Step 3: Filter leads whose campaigns contain the current campaign
+        $filteredLeads = $leads->filter(function ($lead) {
+            // Check campaign conditions manually
+            $leadCampaigns = $lead->campaigns()->get();
+
+            // Replace this condition with your specific campaign matching logic
+            $containsCampaign = $leadCampaigns->contains(function ($campaign) {
+                return $campaign->id === $this->id;
+            });
+
+            return $containsCampaign;
+        });
+
+        return $filteredLeads;
+    }
+
 }
