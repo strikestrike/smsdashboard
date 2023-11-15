@@ -65,7 +65,7 @@ class SendSMSCampaigns extends Command
 
         try {
             $result = $client->SendMessage($messageText, $sendingServer->phone_number, $recipientPhoneNumbers, $reference);
-            Log::info('sending sms: ' . $sendingServer->phone_number . ' ' . implode(',', $recipientPhoneNumbers) . ', api_key:' . $sendingServer->api_key . ' result:' . $result->statusCode);
+            Log::info('sending sms: ' . $sendingServer->phone_number . ' recipients: ' . implode(',', $recipientPhoneNumbers) . ', api_key:' . $sendingServer->api_key . ' result:' . $result->statusCode);
             if ($result->statusCode == TextClientStatusCodes::OK) {
                 $this->info('SMS campaigns sent successfully.');
 

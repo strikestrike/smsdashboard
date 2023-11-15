@@ -106,7 +106,7 @@ class Campaign extends Model
         }
         if (count($campaignCountries) > 0) {
             $qb = $qb->whereHas('country', function ($query) use ($campaignCountries) {
-                $query->whereIn('origin', $campaignCountries->pluck('name'));
+                $query->whereIn('origin', $campaignCountries->pluck('id'));
             });
         }
         $leads = $qb->get();
