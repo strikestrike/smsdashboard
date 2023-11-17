@@ -47,6 +47,15 @@ class SendSMSCampaigns extends Command
         $sendingServers = $campaign->sendingServers;
 
         foreach ($sendingServers as $sendingServer) {
+
+            $todaySentCount = SmsLog::where('type', 'out')
+                ->where('status', 'sent')
+                ->whereDate('created_at', now()->toDateString())
+                ->count();
+            if ($sendingServer->limits != -1 && $todaySentCount >= $sendingServer->limits) {
+                continue;
+            }
+
             if ($this->attemptSending($campaign, $sendingServer)) {
                 $campaign->update(['completed_at' => now()]);
                 break;
@@ -58,42 +67,46 @@ class SendSMSCampaigns extends Command
     {
         $client = new TextClient($sendingServer->api_key ?? $sendingServer->product_token);
 
-        $messageText = $campaign->template;
         $leads = $campaign->associatedLeads();
-        $recipientPhoneNumbers = $leads->pluck('phone')->toArray();
         $reference = $campaign->name . '_' . $campaign->id;
 
         try {
-            $result = $client->SendMessage($messageText, $sendingServer->phone_number, $recipientPhoneNumbers, $reference);
-            Log::info('sending sms: ' . $sendingServer->phone_number . ' recipients: ' . implode(',', $recipientPhoneNumbers) . ', api_key:' . $sendingServer->api_key . ' result:' . $result->statusCode);
-            if ($result->statusCode == TextClientStatusCodes::OK) {
-                $this->info('SMS campaigns sent successfully.');
+            foreach ($leads as $lead) {
+                $leadSentCount = SmsLog::where('lead_id', $lead->id)
+                                    ->where('campaign_id', $campaign->id)
+                                    ->where('type', 'out')
+                                    ->where('status', 'sent')
+                                    ->count();
+                if ($leadSentCount > 0) {
+                    continue;
+                }
 
-                // SMS sent successfully, collect data for batch insertion
-                $smsLogsData = [];
+                $recipientPhoneNumber = '00' . $lead->phone;
+                $messageText = str_replace("[name]", $lead->name, $campaign->template);
 
-                foreach ($leads as $lead) {
-                    // Add data for batch insertion
-                    $smsLogsData[] = [
+                $result = $client->SendMessage($messageText, $sendingServer->phone_number, [$recipientPhoneNumber], $reference);
+                Log::info('sending sms: recipients: ' . $recipientPhoneNumber . ' msg: ' . $messageText . ' result:' . $result->statusCode);
+                if ($result->statusCode == TextClientStatusCodes::OK) {
+                    $this->info('SMS campaigns sent successfully.');
+
+                    SmsLog::insert([
                         'campaign_id' => $campaign->id,
                         'lead_id' => $lead->id,
+                        'sending_server_id' => $sendingServer->id,
                         'status' => 'sent',
                         'type' => 'out',
                         'created_at' => now(),
                         'updated_at' => now(),
-                    ];
+                    ]);
+
                 }
-
-                // Batch insert SMS logs
-                SmsLog::insert($smsLogsData);
-
-                return TRUE;
             }
-            return FALSE;
+
+            return TRUE;
         } catch (\Exception $e) {
             Log::error($e->getMessage());
-
-            return FALSE;
         }
+
+        return FALSE;
     }
 }

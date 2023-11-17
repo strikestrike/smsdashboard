@@ -18,7 +18,8 @@ class SendingServer extends Model
         'product_token',
         'api_key',
         'api_endpoint',
-        'phone_number'
+        'phone_number',
+        'limits'
     ];
 
     public function exclusions()

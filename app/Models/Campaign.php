@@ -37,7 +37,7 @@ class Campaign extends Model
 
         static::creating(function ($model) {
             if (!$model->scheduled_at) {
-                $model->scheduled_at = now(); // Set it to the current time
+                $model->scheduled_at = now()->startOfMinute();
             }
         });
     }
@@ -46,7 +46,7 @@ class Campaign extends Model
     public static function updating($model)
     {
         if (!$model->scheduled_at) {
-            $model->scheduled_at = now(); // Set it to the current time
+            $model->scheduled_at = now()->startOfMinute();
         }
     }
 

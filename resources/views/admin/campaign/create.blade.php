@@ -65,9 +65,9 @@
                                 @endif
                                 <span class="help-block">{{ trans('cruds.campaign.fields.exclusions_helper') }}</span>
                             </div>
-                            <div class="col-sm-12">
-                                <p class="text-muted text-right">Recipients: <span id="recipients_count">238</span></p>
-                            </div>
+{{--                            <div class="col-sm-12">--}}
+{{--                                <p class="text-muted text-right">Recipients: <span id="recipients_count">238</span></p>--}}
+{{--                            </div>--}}
                         </div>
                         <div class="form-group row">
                             <label class="col-sm-2 col-form-label text-right required" for="servers">{{ trans('cruds.campaign.fields.servers') }}</label>

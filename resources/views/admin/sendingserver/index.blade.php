@@ -29,6 +29,7 @@
                     <th>{{ __('cruds.sendingServer.fields.api_key') }}</th>
                     <th>{{ __('cruds.sendingServer.fields.api_endpoint') }}</th>
                     <th>{{ __('cruds.sendingServer.fields.phone_number') }}</th>
+                    <th>{{ __('cruds.sendingServer.fields.limits') }}</th>
                     <th>{{ __('cruds.sendingServer.fields.created_at') }}</th>
                     <th>{{ __('global.actions') }}</th>
                 </tr>
@@ -95,6 +96,7 @@
                         { data: 'api_key', name: 'api_key' },
                         { data: 'api_endpoint', name: 'api_endpoint' },
                         { data: 'phone_number', name: 'phone_number' },
+                        { data: 'limits', name: 'limits' },
                         { data: 'created_at', name: 'created_at' },
                         { data: 'actions', sortable: false, searchable: false }
                     ],

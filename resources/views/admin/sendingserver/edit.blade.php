@@ -53,6 +53,14 @@
                     <span class="help-block">{{ trans('cruds.sendingServer.fields.phone_number_helper') }}</span>
                 </div>
                 <div class="form-group">
+                    <label for="limits">{{ trans('cruds.sendingServer.fields.limits') }}</label>
+                    <input class="form-control {{ $errors->has('limits') ? 'is-invalid' : '' }}" type="text" name="limits" id="limits" value="{{ old('limits', $sendingserver->limits) }}">
+                    @if($errors->has('limits'))
+                        <span class="text-danger">{{ $errors->first('limits') }}</span>
+                    @endif
+                    <span class="help-block">{{ trans('cruds.sendingServer.fields.limits_helper') }}</span>
+                </div>
+                <div class="form-group">
                     <button class="btn btn-danger" type="submit">
                         {{ trans('global.save') }}
                     </button>

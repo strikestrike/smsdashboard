@@ -58,7 +58,7 @@
                             <div class="col-sm-10">
                                 <select class="select2 form-control {{ $errors->has('exclusions') ? 'is-invalid' : '' }}" multiple="multiple" name="exclusions[]" data-placeholder="Select Servers" style="width: 100%;">
                                     @foreach($servers as $server)
-                                        <option value="{{ $server->id }}" {{ $campaign->sendingServers->contains('id', $server->id) ? 'selected' : '' }}>{{ $server->name }}</option>
+                                        <option value="{{ $server->id }}" {{ $campaign->exclusions->contains('id', $server->id) ? 'selected' : '' }}>{{ $server->name }}</option>
                                     @endforeach
                                 </select>
                                 @if($errors->has('exclusions'))
@@ -66,16 +66,16 @@
                                 @endif
                                 <span class="help-block">{{ trans('cruds.campaign.fields.exclusions_helper') }}</span>
                             </div>
-                            <div class="col-sm-12">
-                                <p class="text-muted text-right">Recipients: <span id="recipients_count">238</span></p>
-                            </div>
+{{--                            <div class="col-sm-12">--}}
+{{--                                <p class="text-muted text-right">Recipients: <span id="recipients_count">238</span></p>--}}
+{{--                            </div>--}}
                         </div>
                         <div class="form-group row">
                             <label class="col-sm-2 col-form-label text-right required" for="servers">{{ trans('cruds.campaign.fields.servers') }}</label>
                             <div class="col-sm-10">
                                 <select class="select2 form-control {{ $errors->has('servers') ? 'is-invalid' : '' }}" multiple="multiple" name="servers[]" data-placeholder="Select Servers" style="width: 100%;">
                                     @foreach($servers as $server)
-                                        <option value="{{ $server->id }}" {{ $campaign->exclusions->contains('id', $server->id) ? 'selected' : '' }}>{{ $server->name }}</option>
+                                        <option value="{{ $server->id }}" {{ $campaign->sendingServers->contains('id', $server->id) ? 'selected' : '' }}>{{ $server->name }}</option>
                                     @endforeach
                                 </select>
                                 @if($errors->has('servers'))
@@ -95,8 +95,8 @@
                         </div>
                         <div class="form-group row">
                             <div class="col-sm-10 offset-2">
-                                <p class="text-info scheduled_at_text">&nbsp;</p>
-                                <input type="hidden" name="scheduled_at">
+                                <p class="text-info scheduled_at_text"><?php echo $campaign->scheduled_at ? 'Scheduled At: ' . $campaign->scheduled_at : '' ?></p>
+                                <input type="hidden" name="scheduled_at" value="<?php echo $campaign->scheduled_at ?? '' ?>">
                             </div>
                         </div>
                         <div class="form-group">

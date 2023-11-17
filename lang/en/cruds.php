@@ -155,6 +155,8 @@ return [
             'api_endpoint_helper'       => ' ',
             'phone_number'              => 'Phone Number',
             'phone_number_helper'       => ' ',
+            'limits'                    => 'Limits',
+            'limits_helper'             => ' ',
             'created_at'                => 'Created at',
             'created_at_helper'         => ' ',
             'updated_at'                => 'Updated at',
