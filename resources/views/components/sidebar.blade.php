@@ -58,6 +58,14 @@
             </a>
         </li>
         <li class="nav-item">
+            <a href="{{ route('admin.blacklist.index') }}" class="nav-link {{ Route::is('admin.blacklist.index') ? 'active' : '' }}">
+                <i class="nav-icon fas fa-ban"></i>
+                <p>
+                    Black List
+                </p>
+            </a>
+        </li>
+        <li class="nav-item">
             <a href="{{ route('admin.user.index') }}" class="nav-link {{ Route::is('admin.user.index') ? 'active' : '' }}">
                 <i class="nav-icon fas fa-user"></i>
                 <p>

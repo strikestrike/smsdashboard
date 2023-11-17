@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Models\BlackList;
 use App\Models\Campaign;
 use App\Models\Lead;
 use App\Models\SendingServer;
@@ -10,6 +11,7 @@ use CMText\TextClientStatusCodes;
 use Illuminate\Console\Command;
 use CMText\TextClient;
 use Illuminate\Support\Facades\Log;
+use GuzzleHttp\Client;
 
 class SendSMSCampaigns extends Command
 {
@@ -72,6 +74,12 @@ class SendSMSCampaigns extends Command
 
         try {
             foreach ($leads as $lead) {
+
+                if (!$this->isValidPhoneNumber($lead->phone)) {
+                    $this->addToBlackList($lead->phone);
+                    continue;
+                }
+
                 $leadSentCount = SmsLog::where('lead_id', $lead->id)
                                     ->where('campaign_id', $campaign->id)
                                     ->where('type', 'out')
@@ -108,5 +116,39 @@ class SendSMSCampaigns extends Command
         }
 
         return FALSE;
+    }
+
+    private function isValidPhoneNumber($phoneNumber): bool
+    {
+        try {
+            $client = new Client();
+
+            $response = $client->request('GET', "https://api.cm.com/v1.1/numbervalidation/$phoneNumber?mnp_lookup=true", [
+                'headers' => [
+                    'X-CM-PRODUCTTOKEN' => 'f2531516-900a-408b-849c-3ac19e1c8b7a',
+                    'Accept' => 'application/json',
+                ],
+            ]);
+
+            // Get the response body as a JSON string
+            $jsonResponse = $response->getBody()->getContents();
+
+            // Decode the JSON string to an associative array
+            $data = json_decode($jsonResponse, true);
+
+            return $data['valid_number'] == 1;
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+        }
+
+        return FALSE;
+    }
+
+    private function addToBlackList($phoneNumber)
+    {
+        Blacklist::firstOrCreate(
+            ['phone_number' => $phoneNumber],
+            ['created_at' => now(), 'updated_at' => now()]
+        );;
     }
 }

@@ -109,6 +109,13 @@ class Campaign extends Model
                 $query->whereIn('origin', $campaignCountries->pluck('id'));
             });
         }
+
+        // Get the list of blacklisted phone numbers
+        $blacklistedPhoneNumbers = BlackList::pluck('phone_number')->toArray();
+
+        // Exclude leads with blacklisted phone numbers
+        $qb->whereNotIn('phone', $blacklistedPhoneNumbers);
+
         $leads = $qb->get();
 
         // Filter leads whose campaigns contain the current campaign

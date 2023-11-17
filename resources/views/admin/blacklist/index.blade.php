@@ -1,0 +1,100 @@
+<x-admin>
+    @section('title')
+        {{ __('cruds.blacklist.title') }}
+    @endsection
+
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title"><th>{{ __('cruds.blacklist.title') }}</th></h3>
+        </div>
+        <div class="card-body">
+            <input type="hidden" name="selected_blacklist_ids" value="">
+            <table class="table table-striped datatable-blacklist" width="100%">
+                <thead>
+                <tr>
+                    <th width="10">
+                    </th>
+                    <th>{{ __('cruds.blacklist.fields.id') }}</th>
+                    <th>{{ __('cruds.blacklist.fields.phone_number') }}</th>
+                    <th>{{ __('cruds.blacklist.fields.created_at') }}</th>
+                    <th>{{ __('global.actions') }}</th>
+                </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    @section('page_scripts')
+        <script type="text/javascript">
+            $(function () {
+                var Toast = Swal.mixin({
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 3000
+                });
+
+                let dtButtons = $.extend(true, [], $.fn.dataTable.defaults.buttons)
+                {{--                @can('company_delete')--}}
+                let deleteButtonTrans = '{{ trans('global.datatables.delete') }}';
+                let deleteButton = {
+                    text: deleteButtonTrans,
+                    url: "{{ route('admin.blacklist.massDestroy') }}",
+                    className: 'btn-danger',
+                    action: function (e, dt, node, config) {
+                        var ids = $.map(dt.rows({ selected: true }).data(), function (entry) {
+                            return entry.id
+                        });
+
+                        if (ids.length === 0) {
+                            alert('{{ trans('global.datatables.zero_selected') }}')
+
+                            return
+                        }
+
+                        if (confirm('{{ trans('global.areYouSure') }}')) {
+                            $.ajax({
+                                headers: {'x-csrf-token': _token},
+                                method: 'POST',
+                                url: config.url,
+                                data: { ids: ids, _method: 'DELETE' }})
+                                .done(function () { table.ajax.reload() })
+                        }
+                    }
+                }
+                dtButtons.push(deleteButton);
+                {{--                @endcan--}}
+
+                let dtOverrideGlobals = {
+                    buttons: dtButtons,
+                    processing: true,
+                    serverSide: true,
+                    retrieve: true,
+                    aaSorting: [],
+                    ajax: "{{ route('admin.blacklist.index') }}",
+                    columns: [
+                        { data: 'placeholder', name: 'placeholder' },
+                        { data: 'id', name: 'id' },
+                        { data: 'phone_number', name: 'phone_number' },
+                        { data: 'created_at', name: 'created_at' },
+                        { data: 'actions', sortable: false, searchable: false }
+                    ],
+                    colVis: {
+                        exclude: [ 0]
+                    },
+                    orderCellsTop: true,
+                    order: [[ 1, 'desc' ]],
+                    pageLength: 20,
+                };
+                let table = $('.datatable-blacklist').DataTable(dtOverrideGlobals);
+                $('a[data-toggle="tab"]').on('shown.bs.tab click', function(e){
+                    $($.fn.dataTable.tables(true)).DataTable()
+                        .columns.adjust();
+                });
+
+            });
+        </script>
+    @endsection
+</x-admin>

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BlackListController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\LeadController;
@@ -26,6 +27,9 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
 
     Route::delete('sendingservers/destroy', [SendingServerController::class, 'massDestroy'])->name('sendingservers.massDestroy');
     Route::resource('sendingservers', SendingServerController::class);
+
+    Route::delete('blacklist/destroy', [BlackListController::class, 'massDestroy'])->name('blacklist.massDestroy');
+    Route::resource('blacklist', BlackListController::class);
 
     Route::get('feeds',[ImportController::class,'index'])->name('feeds.index');
     Route::post('feeds/postUploadExcel',[ImportController::class,'postUploadExcel'])->name('feeds.upload');
