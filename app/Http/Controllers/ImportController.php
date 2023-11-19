@@ -6,7 +6,9 @@ use Illuminate\Http\Request;
 use App\Models\Lead;
 use App\Imports\LeadsImport;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Maatwebsite\Excel\Facades\Excel;
 use Pion\Laravel\ChunkUpload\Handler\HandlerFactory;
 use Pion\Laravel\ChunkUpload\Receiver\FileReceiver;
 use Session;
@@ -46,7 +48,12 @@ class ImportController extends Controller
             unlink($file->getPathname());
 
             try {
-                ProcessCsvChunk::dispatch($path);
+//                ProcessCsvChunk::dispatch($path);
+                $import = new LeadsImport();
+                Excel::queueImport($import, $path);
+                $successCount = $import->getSuccessCount();
+                $errorCount = $import->getErrorCount();
+                Log::info("$successCount leads uploaded successfully. $errorCount leads returned errors.");
 
                 return response()->json(['success' => TRUE, 'message' => "Operations successfully queued and will be imported soon."]);
             } catch (\Exception $e) {
