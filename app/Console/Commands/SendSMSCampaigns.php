@@ -49,15 +49,6 @@ class SendSMSCampaigns extends Command
         $sendingServers = $campaign->sendingServers;
 
         foreach ($sendingServers as $sendingServer) {
-
-            $todaySentCount = SmsLog::where('type', 'out')
-                ->where('status', 'sent')
-                ->whereDate('created_at', now()->toDateString())
-                ->count();
-            if ($sendingServer->limits != -1 && $todaySentCount >= $sendingServer->limits) {
-                continue;
-            }
-
             if ($this->attemptSending($campaign, $sendingServer)) {
                 $campaign->update(['completed_at' => now()]);
                 break;
@@ -71,6 +62,11 @@ class SendSMSCampaigns extends Command
 
         $leads = $campaign->associatedLeads();
         $reference = $campaign->name . '_' . $campaign->id;
+
+        $todaySentCount = SmsLog::where('type', 'out')
+            ->where('status', 'sent')
+            ->whereDate('created_at', now()->toDateString())
+            ->count();
 
         try {
             foreach ($leads as $lead) {
@@ -87,6 +83,11 @@ class SendSMSCampaigns extends Command
                                     ->count();
                 if ($leadSentCount > 0) {
                     continue;
+                }
+
+                if ($sendingServer->limits != -1 && $todaySentCount * 1000 >= $sendingServer->limits) {
+                    Log::info('The server(' . $sendingServer->name . ') reached limits for today. ' . $sendingServer->limits);
+                    return FALSE;
                 }
 
                 $recipientPhoneNumber = '00' . $lead->phone;
@@ -107,6 +108,8 @@ class SendSMSCampaigns extends Command
                         'updated_at' => now(),
                     ]);
 
+                    $todaySentCount++;
+
                 }
             }
 
@@ -120,6 +123,9 @@ class SendSMSCampaigns extends Command
 
     private function isValidPhoneNumber($phoneNumber): bool
     {
+        if (empty($phoneNumber)) {
+            return FALSE;
+        }
         try {
             $client = new Client();
 
