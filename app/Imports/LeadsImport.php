@@ -53,6 +53,7 @@ class LeadsImport implements ToModel, WithHeadingRow, WithChunkReading, WithStar
                 // Check if a lead with the same email already exists
                 if (empty($email) || Lead::where('email', $email)->exists()) {
                     $this->errorCount++;
+
                     continue; // Skip the record
                 }
 
@@ -71,13 +72,14 @@ class LeadsImport implements ToModel, WithHeadingRow, WithChunkReading, WithStar
                 // Determine country name based on 'origin' field or phone number
                 $countryName = !empty($row['origin'])
                     ? $this->getCountryNameByCode($row['origin'])
-                    : $this->getCountryNameByPhoneNumber($phone);
+                    : $this->getCountryNameByPhoneNumber('+' . $phone);
 
                 if (empty($countryName)) {
                     $this->errorCount++;
                     continue; // Skip the record
                 }
 
+                Log::debug('insert: email: ' . $email . ', phone:' . $data['phone']);
                 // Find the country by name or create a new one if it doesn't exist
                 $country = Country::firstOrCreate(['name' => strtolower($countryName)]);
 
@@ -95,7 +97,7 @@ class LeadsImport implements ToModel, WithHeadingRow, WithChunkReading, WithStar
                 $this->successCount++;
             }
         } catch (\Exception $e) {
-            Log::info($e->getMessage());
+            Log::debug($e->getMessage());
         }
 
         return null; // Skip the record in the original model
@@ -137,6 +139,7 @@ class LeadsImport implements ToModel, WithHeadingRow, WithChunkReading, WithStar
         }
         $phone = new PhoneNumber($phoneNumber);
         $countryCode = $phone->getCountry();
+
         return $this->getCountryNameByCode($countryCode);
     }
 
