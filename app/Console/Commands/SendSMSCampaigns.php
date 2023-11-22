@@ -38,9 +38,9 @@ class SendSMSCampaigns extends Command
         Log::error('starting');
         $campaigns = Campaign::where('scheduled_at', '<=', now())->ongoingCampaigns()->get();
         Log::error('count' . count($campaigns));
-        foreach ($campaigns as $campaign) {
-            $this->sendSMSCampaign($campaign);
-        }
+//        foreach ($campaigns as $campaign) {
+//            $this->sendSMSCampaign($campaign);
+//        }
     }
 
     private function sendSMSCampaign(Campaign $campaign)
@@ -85,7 +85,7 @@ class SendSMSCampaigns extends Command
                     continue;
                 }
 
-                if ($sendingServer->limits != -1 && $todaySentCount * 1000 >= $sendingServer->limits) {
+                if ($sendingServer->limits != -1 && $todaySentCount >= $sendingServer->limits) {
                     Log::info('The server(' . $sendingServer->name . ') reached limits for today. ' . $sendingServer->limits);
                     return FALSE;
                 }
